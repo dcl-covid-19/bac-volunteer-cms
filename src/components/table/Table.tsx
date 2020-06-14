@@ -1,6 +1,6 @@
 import React from 'react';
 
-//import DataTable from 'react-data-table-component';
+import Checkbox from '@material-ui/core/Checkbox'
 import MaUTable from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell'
@@ -8,21 +8,14 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import { usePagination, useTable, Column } from 'react-table';
+import { usePagination, useRowSelect, useTable, Column, Row } from 'react-table';
 
 import * as results from 'constants/grocery.json';
+import COLUMNS from 'constants/columns';
 
-const COLUMNS = [
-    { Header: 'Provider Name', accessor: 'provider_name' },
-    { Header: 'Resource', accessor: 'resource' },
-    { Header: 'Region', accessor: 'region' },
-    { Header: 'Address', accessor: 'address' },
-    { Header: 'ZIP', accessor: 'zip' },
-    { Header: 'Status', accessor: 'status' },
-    { Header: 'Free', accessor: 'free' },
-];
+import TableToolbar from './TableToolbar';
 
-function Table() {
+const Table = () => {
     const data: Object[] = React.useMemo(() => results.rows, []);
     // const keys: string[] = Object.keys(results.rows[0]) || ['provider_name'];
     // const namedCols = keys.map(key => ({ Header: key, accessor: key as any }));
@@ -36,17 +29,36 @@ function Table() {
         page,
         gotoPage,
         setPageSize,
-        state: { pageIndex, pageSize },
+        state: { pageIndex, pageSize, selectedRowIds },
     } = useTable(
         { columns, data },
         usePagination,
+        useRowSelect,
+        hooks => {
+            hooks.allColumns.push(columns => [
+                {
+                    id: 'selection',
+                    Header: ({ getToggleAllRowsSelectedProps }) => (
+                        <div>
+                            <Checkbox {...getToggleAllRowsSelectedProps()} />
+                        </div>
+                    ),
+                    Cell: ({ row } : { row: Row<Object> }) => (
+                        <div>
+                            <Checkbox {...row.getToggleRowSelectedProps()} />
+                        </div>
+                    ),
+                },
+                ...columns,
+            ])
+        },
     );
 
     const handleChangePage = (event: any, newPage: number) => gotoPage(newPage);
     const handleChangeRowsPerPage = (event: any) => setPageSize(Number(event.target.value));
 
     return (
-        <MaUTable {...getTableProps()} size="small">
+        <MaUTable {...getTableProps()} stickyHeader size="small">
             <TableHead>
                 {headerGroups.map(headerGroup => (
                     <TableRow {...headerGroup.getHeaderGroupProps()}>
@@ -97,27 +109,6 @@ function Table() {
             </TableFooter>
         </MaUTable>
     );
-}
-//const columns = keys.map(key => ({ name: key, selector: key, sortable: true }));
-
-// class Table extends Component {
-//     render() {
-//         return (
-//             <DataTable
-//                 title="Dummy Bay Area Community DB"
-//                 columns={columns}
-//                 data={data}
-//                 defaultSortField="last_update"
-//                 fixedHeader
-//                 expandableRows
-//                 expandableRowsComponent={<h1>Expanded</h1>}
-//                 expandOnRowClicked
-//                 dense
-//                 striped
-//                 style={{width: '100%', height: '100%', overflow: 'scroll'}}
-//             />
-//         );
-//     }
-// };
+};
 
 export default Table;
