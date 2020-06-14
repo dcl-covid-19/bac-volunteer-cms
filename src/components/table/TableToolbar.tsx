@@ -7,7 +7,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
+
+import Search from './Search';
 
 const useToolbarStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,11 +34,16 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
 
 interface TableToolbarProps {
     numSelected: number;
+    setGlobalFilter: (filterValue: any) => void,
 }
 
 const TableToolbar = (props: TableToolbarProps) => {
     const classes = useToolbarStyles();
-    const { numSelected } = props;
+    const { numSelected, setGlobalFilter } = props;
+    const onSearchChange = (value: string, setValue: (value: string) => void) => {
+        setGlobalFilter(value);
+        setValue(value);
+    };
 
     return (
         <Toolbar
@@ -54,16 +60,11 @@ const TableToolbar = (props: TableToolbarProps) => {
                     Drafts
                 </Typography>
             )}
-            {numSelected > 0 ? (
+            <Search onSearchChange={onSearchChange} hidden={numSelected > 0}/>
+            {numSelected > 0 && (
                 <Tooltip title="Delete">
                     <IconButton aria-label="delete">
                         <DeleteIcon />
-                    </IconButton>
-                </Tooltip>
-            ) : (
-                <Tooltip title="Filter list">
-                    <IconButton aria-label="filter list">
-                        <FilterListIcon />
                     </IconButton>
                 </Tooltip>
             )}
