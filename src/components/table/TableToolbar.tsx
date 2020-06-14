@@ -35,11 +35,12 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
 interface TableToolbarProps {
     numSelected: number;
     setGlobalFilter: (filterValue: any) => void,
+    newResourceHandler: (resource: any) => void,
 }
 
 const TableToolbar = (props: TableToolbarProps) => {
     const classes = useToolbarStyles();
-    const { numSelected, setGlobalFilter } = props;
+    const { numSelected, setGlobalFilter, newResourceHandler } = props;
     const onSearchChange = (value: string, setValue: (value: string) => void) => {
         setGlobalFilter(value);
         setValue(value);
@@ -60,7 +61,9 @@ const TableToolbar = (props: TableToolbarProps) => {
                     Drafts
                 </Typography>
             )}
-            <Search onSearchChange={onSearchChange} hidden={numSelected > 0}/>
+            <div style={numSelected > 0 ? {display: "none"} : undefined}>
+                <Search onSearchChange={onSearchChange} hidden={false}/>
+            </div>
             {numSelected > 0 && (
                 <Tooltip title="Delete">
                     <IconButton aria-label="delete">

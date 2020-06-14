@@ -43,6 +43,7 @@ const Table = () => {
 
     const handleChangePage = (event: any, newPage: number) => gotoPage(newPage);
     const handleChangeRowsPerPage = (event: any) => setPageSize(Number(event.target.value));
+    const newResourceHandler = (resource: any) => { console.log(resource); };
 
     return (
         <React.Fragment>
