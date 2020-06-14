@@ -8,6 +8,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import NewResource from './NewResource';
 import Search from './Search';
 
 const useToolbarStyles = makeStyles((theme: Theme) =>
@@ -34,25 +35,25 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
 
 interface TableToolbarProps {
     numSelected: number;
-    setGlobalFilter: (filterValue: any) => void,
-    newResourceHandler: (resource: any) => void,
+    globalFilter: any;
+    setGlobalFilter: (filterValue: any) => void;
+    newResourceHandler: (resource: any) => void;
+    deleteHandler: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 const TableToolbar = (props: TableToolbarProps) => {
     const classes = useToolbarStyles();
-    const { numSelected, setGlobalFilter, newResourceHandler } = props;
-    const onSearchChange = (value: string, setValue: (value: string) => void) => {
-        setGlobalFilter(value);
-        setValue(value);
-    };
+    const { numSelected, globalFilter, setGlobalFilter, newResourceHandler, deleteHandler } = props;
+    const selected = numSelected > 0;
+    const onSearchChange = (value: string) => setGlobalFilter(value);
 
     return (
         <Toolbar
             className={clsx(classes.root, {
-                [classes.highlight]: numSelected > 0,
+                [classes.highlight]: selected,
             })}
         >
-            {numSelected > 0 ? (
+            {selected ? (
                 <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
                     {numSelected} selected
                 </Typography>
@@ -61,15 +62,17 @@ const TableToolbar = (props: TableToolbarProps) => {
                     Drafts
                 </Typography>
             )}
-            <div style={numSelected > 0 ? {display: "none"} : undefined}>
-                <Search onSearchChange={onSearchChange} hidden={false}/>
-            </div>
-            {numSelected > 0 && (
+            {selected ? (
                 <Tooltip title="Delete">
-                    <IconButton aria-label="delete">
+                    <IconButton aria-label="delete" onClick={deleteHandler}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>
+            ) : (
+                <>
+                    <Search onSearchChange={onSearchChange} globalFilter={globalFilter}/>
+                    <NewResource newResourceHandler={newResourceHandler}/>
+                </>
             )}
         </Toolbar>
     );

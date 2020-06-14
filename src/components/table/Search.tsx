@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -8,19 +8,17 @@ import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
 
 interface SearchProps {
-    onSearchChange: (value: string, setValue: (value: string) => void) => void,
-    hidden: boolean,
+    onSearchChange: (value: string) => void;
+    globalFilter: any;
 };
 
 const Search = (props: SearchProps) => {
-    const { onSearchChange, hidden } = props;
-    const [value, setValue] = useState("");
+    const { onSearchChange, globalFilter } = props;
     return (
         <TextField
-            style={hidden ? { display: "none" } : undefined}
-            value={value}
+            value={globalFilter || ''}
             onChange={(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-                onSearchChange(event.target.value, setValue);
+                onSearchChange(event.target.value);
             }}
             placeholder="Search..."
             InputProps={{
@@ -34,8 +32,8 @@ const Search = (props: SearchProps) => {
                 endAdornment: (
                     <InputAdornment position="end">
                         <IconButton
-                            disabled={!value}
-                            onClick={() => onSearchChange("", setValue)}
+                            disabled={!globalFilter}
+                            onClick={() => onSearchChange("")}
                         >
                             <ClearIcon fontSize="small" />
                         </IconButton>

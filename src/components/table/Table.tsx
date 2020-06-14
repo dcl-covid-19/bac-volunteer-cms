@@ -11,17 +11,17 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { useGlobalFilter, usePagination, useRowSelect, useSortBy, useTable, Column } from 'react-table';
 
-import * as results from 'constants/grocery.json';
-
 import TableToolbar from './TableToolbar';
-import { selectColumn, dataColumns } from './Columns';
+import { selectColumn } from './Columns';
 
-const Table = () => {
-    const data: Object[] = React.useMemo(() => results.rows, []);
-    // const keys: string[] = Object.keys(results.rows[0]) || ['provider_name'];
-    // const namedCols = keys.map(key => ({ Header: key, accessor: key as any }));
-    const columns = React.useMemo(() => dataColumns as Column<Object>[], []);
+interface TableProps {
+    columns: Column<Object>[];
+    data: Object[];
+    setData: (data: any[]) => void;
+};
 
+const Table = (props: TableProps) => {
+    const { data, setData, columns } = props;
     const {
         getTableProps,
         headerGroups,
@@ -31,7 +31,7 @@ const Table = () => {
         gotoPage,
         setPageSize,
         setGlobalFilter,
-        state: { pageIndex, pageSize, selectedRowIds },
+        state: { pageIndex, pageSize, selectedRowIds, globalFilter },
     } = useTable(
         { columns, data },
         useGlobalFilter,
@@ -43,13 +43,24 @@ const Table = () => {
 
     const handleChangePage = (event: any, newPage: number) => gotoPage(newPage);
     const handleChangeRowsPerPage = (event: any) => setPageSize(Number(event.target.value));
-    const newResourceHandler = (resource: any) => { console.log(resource); };
+    const newResourceHandler = (resource: any) => setData(data.concat([resource]));
+    const removeByIndexs = (array: Object[], indexs: number[]) => array.filter((_, i) => !indexs.includes(i));
+    const deleteHandler = (event: React.MouseEvent<HTMLElement>) => {
+        const newData = removeByIndexs(
+            data,
+            Object.keys(selectedRowIds).map(x => parseInt(x, 10)),
+        );
+        setData(newData);
+    };
 
     return (
-        <React.Fragment>
+        <>
             <TableToolbar
                 numSelected={Object.keys(selectedRowIds).length}
+                globalFilter={globalFilter}
                 setGlobalFilter={setGlobalFilter}
+                newResourceHandler={newResourceHandler}
+                deleteHandler={deleteHandler}
             />
             <TableContainer>
                 <MaUTable {...getTableProps()} stickyHeader size="small">
@@ -114,7 +125,7 @@ const Table = () => {
                     </TableFooter>
                 </MaUTable>
             </TableContainer>
-        </React.Fragment>
+        </>
     );
 };
 
