@@ -4,7 +4,6 @@ import MaUTable from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer';
-import TableFooter from '@material-ui/core/TableFooter';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
@@ -66,6 +65,23 @@ const Table = (props: TableProps) => {
                 newResourceHandler={newResourceHandler}
                 deleteHandler={deleteHandler}
             />
+            <TablePagination
+                style={{ display: "flex", flexDirection: "row" as "row", padding: 0, height: "45px", overflow: "visible" }}
+                rowsPerPageOptions={[
+                    ...([5, 10, 25, 50, 100].filter((x: number) => (x < data.length))),
+                    { label: 'All', value: data.length },
+                ]}
+                count={rows.length}
+                rowsPerPage={pageSize}
+                page={pageIndex}
+                SelectProps={{
+                    inputProps: { 'aria-label': 'rows per page' },
+                    native: true,
+                }}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+            />
             <TableContainer>
                 <MaUTable {...getTableProps()} stickyHeader size="small">
                     <TableHead>
@@ -105,26 +121,6 @@ const Table = (props: TableProps) => {
                             )
                         })}
                     </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPageOptions={[
-                                    ...([5, 10, 25, 50, 100].filter((x: number) => (x < data.length))),
-                                    { label: 'All', value: data.length },
-                                ]}
-                                count={rows.length}
-                                rowsPerPage={pageSize}
-                                page={pageIndex}
-                                SelectProps={{
-                                    inputProps: { 'aria-label': 'rows per page' },
-                                    native: true,
-                                }}
-                                onChangePage={handleChangePage}
-                                onChangeRowsPerPage={handleChangeRowsPerPage}
-                                ActionsComponent={TablePaginationActions}
-                            />
-                        </TableRow>
-                    </TableFooter>
                 </MaUTable>
             </TableContainer>
         </>

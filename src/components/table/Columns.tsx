@@ -26,6 +26,7 @@ export const actionsColumn = {
 };
 
 export const dataColumns = [
+    { Header: "Last Updated", accessor: "last_update" },
     { Header: "Provider Name", accessor: "provider_name" },
     { Header: "Resource", accessor: "resource" },
     // { Header: "Region", accessor: "region" },
@@ -33,6 +34,7 @@ export const dataColumns = [
     // { Header: "ZIP", accessor: "zip" },
     // { Header: "Status", accessor: "status" },
     // { Header: "Free", accessor: "free" }
+    { Header: "Black-Owned", accessor: "bob" },
     { Header: "Alameda", accessor: "alameda" },
     { Header: "Santa Clara", accessor: "santa_clara" },
     { Header: "San Mateo", accessor: "san_mateo" },
@@ -43,6 +45,4 @@ export const dataColumns = [
     { Header: "Solano", accessor: "solano" },
     { Header: "Napa", accessor: "napa" },
     { Header: "San Francisco", accessor: "san_francisco" },
-    { Header: "Black-Owned", accessor: "bob" },
-    { Header: "Last Updated", accessor: "last_update" },
 ];
