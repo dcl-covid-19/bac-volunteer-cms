@@ -14,6 +14,7 @@ import { useGlobalFilter, usePagination, useRowSelect, useSortBy, useTable, Colu
 import TablePaginationActions from './TablePaginationActions';
 import TableToolbar from './TableToolbar';
 import { actionsColumn } from './Columns';
+import ErrorCell from './ErrorCell';
 
 interface TableProps {
     columns: Column<Object>[];
@@ -24,6 +25,7 @@ interface TableProps {
 
 const Table = (props: TableProps) => {
     const { data, setData, columns, updateRow } = props;
+    const defaultColumn = { Cell: ErrorCell };
     const {
         getTableProps,
         headerGroups,
@@ -35,7 +37,7 @@ const Table = (props: TableProps) => {
         setGlobalFilter,
         state: { pageIndex, pageSize, selectedRowIds, globalFilter },
     } = useTable(
-        { columns, data, updateRow },
+        { columns, data, defaultColumn, updateRow },
         useGlobalFilter,
         useSortBy,
         usePagination,

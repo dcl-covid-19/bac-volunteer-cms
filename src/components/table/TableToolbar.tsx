@@ -59,7 +59,7 @@ const TableToolbar = (props: TableToolbarProps) => {
                 </Typography>
             ) : (
                 <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                    Drafts
+                    Drafts (Fake Data For Demo)
                 </Typography>
             )}
             {selected ? (

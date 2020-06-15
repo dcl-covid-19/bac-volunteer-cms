@@ -7,7 +7,7 @@ import EditButton from './EditButton';
 
 interface EditButtonCellProps {
     row: Row<Object>;
-    updateRow: (rowIndex: number, value: any) => void
+    updateRow: (rowIndex: number, value: any) => void;
 };
 
 export const actionsColumn = {
