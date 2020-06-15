@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/bac-volunteer-cms/static/css/main.3fd04b9d.chunk.css",
-    "main.js": "/bac-volunteer-cms/static/js/main.8de28441.chunk.js",
-    "main.js.map": "/bac-volunteer-cms/static/js/main.8de28441.chunk.js.map",
+    "main.js": "/bac-volunteer-cms/static/js/main.cb5e7e77.chunk.js",
+    "main.js.map": "/bac-volunteer-cms/static/js/main.cb5e7e77.chunk.js.map",
     "runtime-main.js": "/bac-volunteer-cms/static/js/runtime-main.d4c9100f.js",
     "runtime-main.js.map": "/bac-volunteer-cms/static/js/runtime-main.d4c9100f.js.map",
-    "static/js/2.4a1031cd.chunk.js": "/bac-volunteer-cms/static/js/2.4a1031cd.chunk.js",
-    "static/js/2.4a1031cd.chunk.js.map": "/bac-volunteer-cms/static/js/2.4a1031cd.chunk.js.map",
+    "static/js/2.2717b66b.chunk.js": "/bac-volunteer-cms/static/js/2.2717b66b.chunk.js",
+    "static/js/2.2717b66b.chunk.js.map": "/bac-volunteer-cms/static/js/2.2717b66b.chunk.js.map",
     "index.html": "/bac-volunteer-cms/index.html",
-    "precache-manifest.71c5975629bba2855e2b935de1cbb728.js": "/bac-volunteer-cms/precache-manifest.71c5975629bba2855e2b935de1cbb728.js",
+    "precache-manifest.82b3270ad3366edf92505ebd2b8347a3.js": "/bac-volunteer-cms/precache-manifest.82b3270ad3366edf92505ebd2b8347a3.js",
     "service-worker.js": "/bac-volunteer-cms/service-worker.js",
     "static/css/main.3fd04b9d.chunk.css.map": "/bac-volunteer-cms/static/css/main.3fd04b9d.chunk.css.map",
-    "static/js/2.4a1031cd.chunk.js.LICENSE.txt": "/bac-volunteer-cms/static/js/2.4a1031cd.chunk.js.LICENSE.txt"
+    "static/js/2.2717b66b.chunk.js.LICENSE.txt": "/bac-volunteer-cms/static/js/2.2717b66b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.d4c9100f.js",
-    "static/js/2.4a1031cd.chunk.js",
+    "static/js/2.2717b66b.chunk.js",
     "static/css/main.3fd04b9d.chunk.css",
-    "static/js/main.8de28441.chunk.js"
+    "static/js/main.cb5e7e77.chunk.js"
   ]
 }
