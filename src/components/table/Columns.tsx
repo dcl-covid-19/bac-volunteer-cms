@@ -1,19 +1,28 @@
 import React from 'react';
 
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import EditIcon from '@material-ui/icons/Edit';
 import { Row } from 'react-table';
 
-import CompactCheckbox from 'components/common/CompactCheckbox';
+const editHandler = () => console.log("clicked");
 
-export const selectColumn = {
+export const actionsColumn = {
     id: 'selection',
     Header: ({ getToggleAllRowsSelectedProps } : { getToggleAllRowsSelectedProps: any }) => (
         <div>
-            <CompactCheckbox {...getToggleAllRowsSelectedProps()} />
+            <Checkbox {...getToggleAllRowsSelectedProps()} color="primary" />
         </div>
     ),
     Cell: ({ row } : { row: Row<Object> }) => (
-        <div>
-            <CompactCheckbox {...row.getToggleRowSelectedProps()} />
+        <div style={{ display: "flex", flexDirection: "row" as "row" }}>
+            <Checkbox {...row.getToggleRowSelectedProps()} color="primary" />
+            <Tooltip title="Edit">
+                <IconButton aria-label="edit" onClick={editHandler}>
+                    <EditIcon />
+                </IconButton>
+            </Tooltip>
         </div>
     ),
 };
@@ -36,5 +45,6 @@ export const dataColumns = [
     { Header: "Solano", accessor: "solano" },
     { Header: "Napa", accessor: "napa" },
     { Header: "San Francisco", accessor: "san_francisco" },
+    { Header: "Black-Owned", accessor: "bob" },
     { Header: "Last Updated", accessor: "last_update" },
 ];

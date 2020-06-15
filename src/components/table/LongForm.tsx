@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -10,7 +11,6 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 
-import CompactCheckbox from 'components/common/CompactCheckbox';
 import { allFieldsEqualBool, setAllFields } from 'util/Resource';
 import * as options from 'constants/Options.json';
 
@@ -19,7 +19,7 @@ const counties = Object.keys(countyNames);
 const resourceTypes = options.resource;
 
 const makeOptions = (options: any) => Object.keys(options).map(option => (
-    <FormControlLabel value={option} control={<Radio />} label={options[option]} key={option} />
+    <FormControlLabel value={option} control={<Radio color="primary" />} label={options[option]} key={option} />
 ));
 const makeCheckboxes = (
     resource: any,
@@ -27,8 +27,9 @@ const makeCheckboxes = (
     handleChecked: (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => void
 ) => Object.keys(names).map(field => (
     <FormControlLabel
-        control={<CompactCheckbox checked={!!resource[field]} onChange={handleChecked(field)} />}
+        control={<Checkbox checked={!!resource[field]} onChange={handleChecked(field)} />}
         label={names[field]}
+        key={field}
     />
 ));
 
@@ -78,15 +79,6 @@ export const LongForm = function(props: LongFormProps) {
                     label="Provider Name"
                 />
             </FormControl>
-            <FormControl variant="outlined" fullWidth className={classes.formControl}>
-                <InputLabel htmlFor="address">Address</InputLabel>
-                <OutlinedInput
-                    id="address"
-                    value={resource.address || ''}
-                    onChange={handleChange('address')}
-                    label="Address"
-                />
-            </FormControl>
             <FormControl
                 component="fieldset"
                 required
@@ -104,14 +96,20 @@ export const LongForm = function(props: LongFormProps) {
                     {makeOptions(resourceTypes)}
                 </RadioGroup>
             </FormControl>
-            <FormControl component="fieldset" required error={!!errors.counties} className={classes.formControl}>
+            <FormControl
+                fullWidth
+                component="fieldset"
+                required
+                error={!!errors.counties}
+                className={classes.formControl}
+            >
                 <FormLabel component="legend">Counties Served</FormLabel>
                 <FormGroup row style={{ padding: "5px" }}>
                     {makeCheckboxes(resource, countyNames, handleChecked)}
                 </FormGroup>
                 <FormControlLabel
                     control={(
-                        <CompactCheckbox
+                        <Checkbox
                             checked={allFieldsEqualBool(resource, counties, true)}
                             indeterminate={
                                 !allFieldsEqualBool(resource, counties, true) &&
@@ -121,6 +119,21 @@ export const LongForm = function(props: LongFormProps) {
                         />
                     )}
                     label="All"
+                />
+            </FormControl>
+            <FormControl variant="outlined" fullWidth className={classes.formControl}>
+                <InputLabel htmlFor="address">Address</InputLabel>
+                <OutlinedInput
+                    id="address"
+                    value={resource.address || ''}
+                    onChange={handleChange('address')}
+                    label="Address"
+                />
+            </FormControl>
+            <FormControl className={classes.formControl}>
+                <FormControlLabel
+                    control={<Checkbox color="primary" checked={resource.bob} onChange={handleChecked('bob')} />}
+                    label="Black-Owned"
                 />
             </FormControl>
         </>

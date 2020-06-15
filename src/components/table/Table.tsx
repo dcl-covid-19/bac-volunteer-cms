@@ -13,7 +13,7 @@ import { useGlobalFilter, usePagination, useRowSelect, useSortBy, useTable, Colu
 
 import TablePaginationActions from './TablePaginationActions';
 import TableToolbar from './TableToolbar';
-import { selectColumn } from './Columns';
+import { actionsColumn } from './Columns';
 
 interface TableProps {
     columns: Column<Object>[];
@@ -39,7 +39,7 @@ const Table = (props: TableProps) => {
         useSortBy,
         usePagination,
         useRowSelect,
-        hooks => hooks.allColumns.push(columns => [selectColumn, ...columns]),
+        hooks => hooks.allColumns.push(columns => [actionsColumn, ...columns]),
     );
 
     const handleChangePage = (event: any, newPage: number) => gotoPage(newPage);
