@@ -5,15 +5,16 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
 
 import CompactCheckbox from 'components/common/CompactCheckbox';
-import * as options from 'constants/options.json';
+import { coerceToOptions } from 'util/Resource';
+import * as options from 'constants/Options.json';
 
 const counties = options.county;
+const resourceTypes = options.resource;
 const allCountiesChecked = (resource: any) => counties.reduce((a: boolean, x: any) => (a && !!resource[x]), true);
 const noCountiesChecked = (resource: any) => counties.reduce((a: boolean, x: any) => (a && !resource[x]), true);
 
@@ -35,7 +36,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 120,
     },
   }),
 );
@@ -49,7 +49,6 @@ interface LongFormProps {
 export const LongForm = function(props: LongFormProps) {
     const classes = useStyles();
     const { setResource, resource, errors } = props;
-    console.log(resource);
     const handleChange = (field: string) => (event: any) => {
         setResource({ ...resource, [field]: event.target.value });
     };
@@ -62,27 +61,35 @@ export const LongForm = function(props: LongFormProps) {
     };
     return (
         <>
-            <FormControl required error={errors.provider_name} className={classes.formControl}>
+            <FormControl
+                required
+                error={!!errors.provider_name}
+                variant="outlined"
+                fullWidth
+                className={classes.formControl}
+            >
                 <InputLabel htmlFor="provider-name">Provider Name</InputLabel>
-                <Input
+                <OutlinedInput
                     id="provider-name"
                     value={resource.provider_name}
                     onChange={handleChange('provider_name')}
+                    label="Provider Name"
                 />
             </FormControl>
-            <TextField
-                size="small"
-                margin="dense"
-                label="Address"
-                type="text"
-                value={resource.address}
-                onChange={handleChange('address')}
-            />
-            <FormControl required error={errors.resource} variant="outlined" className={classes.formControl}>
+            <FormControl variant="outlined" fullWidth className={classes.formControl}>
+                <InputLabel htmlFor="address">Address</InputLabel>
+                <OutlinedInput
+                    id="address"
+                    value={resource.address}
+                    onChange={handleChange('address')}
+                    label="Address"
+                />
+            </FormControl>
+            <FormControl required error={!!errors.resource} variant="outlined" className={classes.formControl}>
                 <InputLabel htmlFor="add-resource-outlined">Resource Type</InputLabel>
                 <Select
                     native
-                    value={resource.resource}
+                    value={coerceToOptions(resource.resource, resourceTypes)}
                     onChange={handleChange('resource')}
                     label="Resource Type"
                     inputProps={{
@@ -96,47 +103,47 @@ export const LongForm = function(props: LongFormProps) {
                     <option value="core">Core Service Agency (Basic Emergency and Support Services)</option>
                 </Select>
             </FormControl>
-            <FormControl required error={errors.counties} className={classes.formControl}>
+            <FormControl required error={!!errors.counties} className={classes.formControl}>
                 <FormLabel component="legend">Counties Served</FormLabel>
                 <FormGroup row style={{ padding: "5px" }}>
                     <FormControlLabel
-                        control={<CompactCheckbox checked={resource.alameda} onChange={handleChecked('alameda')} />}
+                        control={<CompactCheckbox checked={!!resource.alameda} onChange={handleChecked('alameda')} />}
                         label="Alameda"
                     />
                     <FormControlLabel
-                        control={<CompactCheckbox checked={resource.santa_clara} onChange={handleChecked('santa_clara')} />}
+                        control={<CompactCheckbox checked={!!resource.santa_clara} onChange={handleChecked('santa_clara')} />}
                         label="Santa Clara"
                     />
                     <FormControlLabel
-                        control={<CompactCheckbox checked={resource.san_mateo} onChange={handleChecked('san_mateo')} />}
+                        control={<CompactCheckbox checked={!!resource.san_mateo} onChange={handleChecked('san_mateo')} />}
                         label="San Mateo"
                     />
                     <FormControlLabel
-                        control={<CompactCheckbox checked={resource.contra_costa} onChange={handleChecked('contra_costa')} />}
+                        control={<CompactCheckbox checked={!!resource.contra_costa} onChange={handleChecked('contra_costa')} />}
                         label="Contra Costa"
                     />
                     <FormControlLabel
-                        control={<CompactCheckbox checked={resource.marin} onChange={handleChecked('marin')} />}
+                        control={<CompactCheckbox checked={!!resource.marin} onChange={handleChecked('marin')} />}
                         label="Marin"
                     />
                     <FormControlLabel
-                        control={<CompactCheckbox checked={resource.monterey} onChange={handleChecked('monterey')} />}
+                        control={<CompactCheckbox checked={!!resource.monterey} onChange={handleChecked('monterey')} />}
                         label="Monterey"
                     />
                     <FormControlLabel
-                        control={<CompactCheckbox checked={resource.sonoma} onChange={handleChecked('sonoma')} />}
+                        control={<CompactCheckbox checked={!!resource.sonoma} onChange={handleChecked('sonoma')} />}
                         label="Sonoma"
                     />
                     <FormControlLabel
-                        control={<CompactCheckbox checked={resource.solano} onChange={handleChecked('solano')} />}
+                        control={<CompactCheckbox checked={!!resource.solano} onChange={handleChecked('solano')} />}
                         label="Solano"
                     />
                     <FormControlLabel
-                        control={<CompactCheckbox checked={resource.napa} onChange={handleChecked('napa')} />}
+                        control={<CompactCheckbox checked={!!resource.napa} onChange={handleChecked('napa')} />}
                         label="Napa"
                     />
                     <FormControlLabel
-                        control={<CompactCheckbox checked={resource.san_francisco} onChange={handleChecked('san_francisco')} />}
+                        control={<CompactCheckbox checked={!!resource.san_francisco} onChange={handleChecked('san_francisco')} />}
                         label="San Francisco"
                     />
                 </FormGroup>

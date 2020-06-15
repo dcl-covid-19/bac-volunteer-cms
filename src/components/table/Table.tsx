@@ -106,11 +106,7 @@ const Table = (props: TableProps) => {
                         <TableRow>
                             <TablePagination
                                 rowsPerPageOptions={[
-                                    5,
-                                    10,
-                                    25,
-                                    50,
-                                    100,
+                                    ...([5, 10, 25, 50, 100].filter((x: number) => (x < data.length))),
                                     { label: 'All', value: data.length },
                                 ]}
                                 count={rows.length}

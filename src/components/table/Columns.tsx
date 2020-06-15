@@ -27,5 +27,3 @@ export const dataColumns = [
     { Header: "Status", accessor: "status" },
     { Header: "Free", accessor: "free" }
 ];
-
-export default dataColumns;
