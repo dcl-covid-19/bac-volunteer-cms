@@ -6,7 +6,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 
 import { AddEditDialog } from './AddEditDialog';
 
-const initialResource: any = {};
+const initialResource: any = {"resource": "invalid"};
 
 interface NewResourceProps {
     newResourceHandler: (resource: any) => void;

@@ -132,4 +132,4 @@ const Table = (props: TableProps) => {
     );
 };
 
-export default React.memo(Table);
+export default Table;

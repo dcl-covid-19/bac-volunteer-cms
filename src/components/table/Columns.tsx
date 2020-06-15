@@ -1,18 +1,19 @@
 import React from 'react';
 
-import Checkbox from '@material-ui/core/Checkbox'
 import { Row } from 'react-table';
+
+import CompactCheckbox from 'components/common/CompactCheckbox';
 
 export const selectColumn = {
     id: 'selection',
     Header: ({ getToggleAllRowsSelectedProps } : { getToggleAllRowsSelectedProps: any }) => (
         <div>
-            <Checkbox {...getToggleAllRowsSelectedProps()} />
+            <CompactCheckbox {...getToggleAllRowsSelectedProps()} />
         </div>
     ),
     Cell: ({ row } : { row: Row<Object> }) => (
         <div>
-            <Checkbox {...row.getToggleRowSelectedProps()} />
+            <CompactCheckbox {...row.getToggleRowSelectedProps()} />
         </div>
     ),
 };
