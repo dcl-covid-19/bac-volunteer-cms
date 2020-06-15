@@ -27,7 +27,7 @@ const makeCheckboxes = (
     handleChecked: (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => void
 ) => Object.keys(names).map(field => (
     <FormControlLabel
-        control={<Checkbox checked={!!resource[field]} onChange={handleChecked(field)} />}
+        control={<Checkbox color="primary" checked={!!resource[field]} onChange={handleChecked(field)} />}
         label={names[field]}
         key={field}
     />
@@ -41,13 +41,13 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface LongFormProps {
+interface ResourceFormProps {
     resource: any;
     setResource: (resource: any) => void;
     errors: any;
 };
 
-export const LongForm = function(props: LongFormProps) {
+export const ResourceForm = function(props: ResourceFormProps) {
     const classes = useStyles();
     const { setResource, resource, errors } = props;
     const handleChange = (field: string) => (event: any) => {
@@ -104,12 +104,13 @@ export const LongForm = function(props: LongFormProps) {
                 className={classes.formControl}
             >
                 <FormLabel component="legend">Counties Served</FormLabel>
-                <FormGroup row style={{ padding: "5px" }}>
+                <FormGroup row>
                     {makeCheckboxes(resource, countyNames, handleChecked)}
                 </FormGroup>
                 <FormControlLabel
                     control={(
                         <Checkbox
+                            color="primary"
                             checked={allFieldsEqualBool(resource, counties, true)}
                             indeterminate={
                                 !allFieldsEqualBool(resource, counties, true) &&
@@ -140,4 +141,4 @@ export const LongForm = function(props: LongFormProps) {
     );
 }
 
-export default LongForm;
+export default ResourceForm;

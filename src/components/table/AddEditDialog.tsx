@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import LongForm from './LongForm';
+import ResourceForm from './ResourceForm';
 import { getResourceErrors } from 'util/Resource';
 
 interface AddEditDialogProps {
@@ -50,7 +50,7 @@ export const AddEditDialog = (props: AddEditDialogProps) => {
                 <DialogTitle id="dialog-title">{title}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>{description}</DialogContentText>
-                    <LongForm resource={resource} setResource={setResource} errors={errors}/>
+                    <ResourceForm resource={resource} setResource={setResource} errors={errors}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="secondary">

@@ -8,7 +8,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import NewResource from './NewResource';
+import NewResourceButton from './NewResourceButton';
 import Search from './Search';
 
 const useToolbarStyles = makeStyles((theme: Theme) =>
@@ -71,7 +71,7 @@ const TableToolbar = (props: TableToolbarProps) => {
             ) : (
                 <>
                     <Search onSearchChange={onSearchChange} globalFilter={globalFilter}/>
-                    <NewResource newResourceHandler={newResourceHandler}/>
+                    <NewResourceButton newResourceHandler={newResourceHandler}/>
                 </>
             )}
         </Toolbar>

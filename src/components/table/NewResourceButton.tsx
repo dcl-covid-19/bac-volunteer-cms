@@ -12,7 +12,7 @@ interface NewResourceProps {
     newResourceHandler: (resource: any) => void;
 };
 
-const NewResource = (props: NewResourceProps) => {
+const NewResourceButton = (props: NewResourceProps) => {
     const { newResourceHandler } = props;
     const [resource, setResource] = useState(initialResource);
     const [isOpen, setOpen] = React.useState(false);
@@ -38,4 +38,4 @@ const NewResource = (props: NewResourceProps) => {
     )
 }
 
-export default NewResource;
+export default NewResourceButton;
