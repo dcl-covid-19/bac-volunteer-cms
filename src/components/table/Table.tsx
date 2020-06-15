@@ -25,6 +25,13 @@ interface TableProps {
 const Table = (props: TableProps) => {
     const { data, setData, columns, updateRow } = props;
     const defaultColumn = { Cell: ErrorCell };
+    const footerStyle: React.CSSProperties = {
+        minHeight: "54px",
+        border: 0,
+        borderTopWidth: "1px",
+        borderTopColor: "#e0e0e0",
+        borderStyle: "solid"
+    };
     const {
         getTableProps,
         headerGroups,
@@ -64,23 +71,6 @@ const Table = (props: TableProps) => {
                 setGlobalFilter={setGlobalFilter}
                 newResourceHandler={newResourceHandler}
                 deleteHandler={deleteHandler}
-            />
-            <TablePagination
-                style={{ display: "flex", flexDirection: "row" as "row", padding: 0, height: "45px", overflow: "visible" }}
-                rowsPerPageOptions={[
-                    ...([5, 10, 25, 50, 100].filter((x: number) => (x < data.length))),
-                    { label: 'All', value: data.length },
-                ]}
-                count={rows.length}
-                rowsPerPage={pageSize}
-                page={pageIndex}
-                SelectProps={{
-                    inputProps: { 'aria-label': 'rows per page' },
-                    native: true,
-                }}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
             />
             <TableContainer>
                 <MaUTable {...getTableProps()} stickyHeader size="small">
@@ -123,6 +113,24 @@ const Table = (props: TableProps) => {
                     </TableBody>
                 </MaUTable>
             </TableContainer>
+            <TablePagination
+                style={footerStyle}
+                rowsPerPageOptions={[
+                    ...([5, 10, 25, 50, 100].filter((x: number) => (x < data.length))),
+                    { label: 'All', value: data.length },
+                ]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={pageSize}
+                page={pageIndex}
+                SelectProps={{
+                    inputProps: { 'aria-label': 'rows per page' },
+                    native: true,
+                }}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+            />
         </>
     );
 };
