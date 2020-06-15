@@ -10,6 +10,9 @@ import * as results from 'constants/Meals.json';
 function App() {
     const [data, setData] = React.useState(results.rows);
     const columns = React.useMemo(() => dataColumns as Column<Object>[], []);
+    const updateRow = (rowIndex: number, value: any) => setData(
+        old => old.map((row, index) => (index === rowIndex ? value : row))
+    );
     const appStyle = {
         height: "100%",
         width: "100%",
@@ -22,6 +25,7 @@ function App() {
                 data={data}
                 setData={setData}
                 columns={columns}
+                updateRow={updateRow}
             />
         </Box>
     );;

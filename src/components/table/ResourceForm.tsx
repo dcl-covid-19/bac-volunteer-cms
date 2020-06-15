@@ -133,7 +133,7 @@ export const ResourceForm = function(props: ResourceFormProps) {
             </FormControl>
             <FormControl className={classes.formControl}>
                 <FormControlLabel
-                    control={<Checkbox color="primary" checked={resource.bob} onChange={handleChecked('bob')} />}
+                    control={<Checkbox color="primary" checked={!!resource.bob} onChange={handleChecked('bob')} />}
                     label="Black-Owned"
                 />
             </FormControl>

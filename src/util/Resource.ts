@@ -14,19 +14,17 @@ export const setAllFields = (resource: any, setResource: (resource: any) => void
     setResource({ ...resource, ...newValues });
 };
 
-export interface IResourceErrors {
-    provider_name?: string;
-    resource?: string;
-    counties?: string;
-};
+export const fieldErrors: any = Object.freeze({
+    'provider_name': (name: string) => !name,
+    'resource': (resource: string) => !resourceTypes[resource],
+});
 
 export const getResourceErrors = (resource: any) => {
-    var errors: IResourceErrors = {};
-    if (!resource.provider_name) {
-        errors.provider_name = 'Name Required';
-    }
-    if (!resourceTypes[resource.resource]) {
-        errors.resource = 'Resource Type Required';
+    var errors: any = {};
+    for (const field in fieldErrors) {
+        if (fieldErrors.hasOwnProperty(field) && fieldErrors[field](resource[field])) {
+            errors[field] = 'invalid';
+        }
     }
     if (allFieldsEqualBool(resource, counties, false)) {
         errors.counties = 'At least one county must be served';

@@ -1,12 +1,14 @@
 import React from 'react';
 
 import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import EditIcon from '@material-ui/icons/Edit';
 import { Row } from 'react-table';
 
-const editHandler = () => console.log("clicked");
+import EditButton from './EditButton';
+
+interface EditButtonCellProps {
+    row: Row<Object>;
+    updateRow: (rowIndex: number, value: any) => void
+};
 
 export const actionsColumn = {
     id: 'selection',
@@ -15,14 +17,10 @@ export const actionsColumn = {
             <Checkbox {...getToggleAllRowsSelectedProps()} color="primary" />
         </div>
     ),
-    Cell: ({ row } : { row: Row<Object> }) => (
+    Cell: ({ row, updateRow } : EditButtonCellProps) => (
         <div style={{ display: "flex", flexDirection: "row" as "row" }}>
             <Checkbox {...row.getToggleRowSelectedProps()} color="primary" />
-            <Tooltip title="Edit">
-                <IconButton aria-label="edit" onClick={editHandler}>
-                    <EditIcon />
-                </IconButton>
-            </Tooltip>
+            <EditButton originalResource={row.original} updateRow={updateRow} rowIndex={row.index} />
         </div>
     ),
 };

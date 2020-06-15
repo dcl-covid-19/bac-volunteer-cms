@@ -19,10 +19,11 @@ interface TableProps {
     columns: Column<Object>[];
     data: Object[];
     setData: (data: any[]) => void;
+    updateRow: (rowIndex: number, value: any) => void;
 };
 
 const Table = (props: TableProps) => {
-    const { data, setData, columns } = props;
+    const { data, setData, columns, updateRow } = props;
     const {
         getTableProps,
         headerGroups,
@@ -34,7 +35,7 @@ const Table = (props: TableProps) => {
         setGlobalFilter,
         state: { pageIndex, pageSize, selectedRowIds, globalFilter },
     } = useTable(
-        { columns, data },
+        { columns, data, updateRow },
         useGlobalFilter,
         useSortBy,
         usePagination,
