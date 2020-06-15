@@ -13,7 +13,7 @@ const ErrorCell = (props: ErrorCellProps) => {
     const { value, column } = props;
     const hasErrors = column.id && fieldErrors[column.id!] && fieldErrors[column.id!](value);
 
-    return hasErrors ? <div style={{ 'backgroundColor': '#ffe2ec' }}>{value}</div> : value;
+    return hasErrors ? <div style={{ 'backgroundColor': '#ffe2ec' }}>{value}</div> : (value || null);
 };
 
 export default ErrorCell;
