@@ -27,7 +27,7 @@ const NewResource = (props: NewResourceProps) => {
             </Tooltip>
             <AddEditDialog
                 title="New Resource"
-                description="Add a resorce to the community map."
+                description="Add a resource to the community map."
                 isOpen={isOpen}
                 setOpen={setOpen}
                 resource={resource}

@@ -69,8 +69,9 @@ const useStyles = makeStyles({
     },
 });
 
-const StyledCheckbox = React.forwardRef(
+const CompactCheckbox = React.forwardRef(
     (props: CheckboxProps, ref) => {
+        console.log("checkbox props " + props);
         const classes = useStyles();
         const { indeterminate } = props;
         const defaultRef = React.useRef();
@@ -96,4 +97,4 @@ const StyledCheckbox = React.forwardRef(
     }
 );
 
-export default StyledCheckbox;
+export default CompactCheckbox;

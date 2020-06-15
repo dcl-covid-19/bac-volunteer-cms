@@ -5,6 +5,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
+import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
@@ -48,6 +49,7 @@ interface LongFormProps {
 export const LongForm = function(props: LongFormProps) {
     const classes = useStyles();
     const { setResource, resource, errors } = props;
+    console.log(resource);
     const handleChange = (field: string) => (event: any) => {
         setResource({ ...resource, [field]: event.target.value });
     };
@@ -60,23 +62,19 @@ export const LongForm = function(props: LongFormProps) {
     };
     return (
         <>
-            <TextField
-                required
-                size="small"
-                margin="dense"
-                label="Provider Name"
-                type="text"
-                fullWidth
-                error={errors.provider_name}
-                value={resource.provider_name}
-                onChange={handleChange('provider_name')}
-            />
+            <FormControl required error={errors.provider_name} className={classes.formControl}>
+                <InputLabel htmlFor="provider-name">Provider Name</InputLabel>
+                <Input
+                    id="provider-name"
+                    value={resource.provider_name}
+                    onChange={handleChange('provider_name')}
+                />
+            </FormControl>
             <TextField
                 size="small"
                 margin="dense"
                 label="Address"
                 type="text"
-                fullWidth
                 value={resource.address}
                 onChange={handleChange('address')}
             />
@@ -100,7 +98,7 @@ export const LongForm = function(props: LongFormProps) {
             </FormControl>
             <FormControl required error={errors.counties} className={classes.formControl}>
                 <FormLabel component="legend">Counties Served</FormLabel>
-                <FormGroup row>
+                <FormGroup row style={{ padding: "5px" }}>
                     <FormControlLabel
                         control={<CompactCheckbox checked={resource.alameda} onChange={handleChecked('alameda')} />}
                         label="Alameda"

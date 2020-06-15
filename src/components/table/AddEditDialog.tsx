@@ -41,6 +41,7 @@ export const AddEditDialog = (props: AddEditDialogProps) => {
     return (
         <div>
             <Dialog
+                maxWidth="lg"
                 open={isOpen}
                 onClose={handleClose}
                 aria-labelledby="dialog-title"
