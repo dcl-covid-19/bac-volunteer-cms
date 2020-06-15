@@ -1,16 +1,16 @@
 {
-    "county": [
-        "alameda",
-        "santa_clara",
-        "san_mateo",
-        "contra_costa",
-        "marin",
-        "monterey",
-        "sonoma",
-        "solano",
-        "napa",
-        "san_francisco"
-    ],
+    "county": {
+        "alameda": "Alameda",
+        "santa_clara": "Santa Clara",
+        "san_mateo": "San Mateo",
+        "contra_costa": "Contra Costa",
+        "marin": "Marin",
+        "monterey": "Monterey",
+        "sonoma": "Sonoma",
+        "solano": "Solano",
+        "napa": "Napa",
+        "san_francisco": "San Francisco"
+    },
     "resource": {
         "meal": "Free Food Provider",
         "grocery": "Grocery Provider",

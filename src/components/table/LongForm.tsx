@@ -7,30 +7,30 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import InputLabel from '@material-ui/core/InputLabel';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
-import Select from '@material-ui/core/Select';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 
 import CompactCheckbox from 'components/common/CompactCheckbox';
-import { coerceToOptions } from 'util/Resource';
+import { allFieldsEqualBool, setAllFields } from 'util/Resource';
 import * as options from 'constants/Options.json';
 
-const counties = options.county;
+const countyNames = options.county;
+const counties = Object.keys(countyNames);
 const resourceTypes = options.resource;
-const allCountiesChecked = (resource: any) => counties.reduce((a: boolean, x: any) => (a && !!resource[x]), true);
-const noCountiesChecked = (resource: any) => counties.reduce((a: boolean, x: any) => (a && !resource[x]), true);
 
-export const getErrors = (resource: any) => {
-    var errors: any = {};
-    if (!resource.provider_name) {
-        errors.provider_name = 'Name Required';
-    }
-    if (!resource.resource) {
-        errors.resource = 'Resource Type Required';
-    }
-    if (noCountiesChecked(resource)) {
-        errors.counties = 'At least one county must be served';
-    }
-    return errors;
-};
+const makeOptions = (options: any) => Object.keys(options).map(option => (
+    <FormControlLabel value={option} control={<Radio />} label={options[option]} key={option} />
+));
+const makeCheckboxes = (
+    resource: any,
+    names: any,
+    handleChecked: (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => void
+) => Object.keys(names).map(field => (
+    <FormControlLabel
+        control={<CompactCheckbox checked={!!resource[field]} onChange={handleChecked(field)} />}
+        label={names[field]}
+    />
+));
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,12 +53,14 @@ export const LongForm = function(props: LongFormProps) {
         setResource({ ...resource, [field]: event.target.value });
     };
     const handleChecked = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        setResource({ ...resource, [field]: event.target.checked });
+        setResource({ ...resource, [field]: event.target.checked ? 1 : 0 });
     };
-    const checkAllCounties = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const obj = counties.reduce((acc: any, cur: any) => ({...acc, [cur]: event.target.checked}), {});
-        setResource({ ...resource, ...obj });
-    };
+    const checkAllCounties = (event: React.ChangeEvent<HTMLInputElement>) => setAllFields(
+        resource,
+        setResource,
+        counties,
+        event.target.checked ? 1 : 0
+    );
     return (
         <>
             <FormControl
@@ -71,7 +73,7 @@ export const LongForm = function(props: LongFormProps) {
                 <InputLabel htmlFor="provider-name">Provider Name</InputLabel>
                 <OutlinedInput
                     id="provider-name"
-                    value={resource.provider_name}
+                    value={resource.provider_name || ''}
                     onChange={handleChange('provider_name')}
                     label="Provider Name"
                 />
@@ -80,78 +82,41 @@ export const LongForm = function(props: LongFormProps) {
                 <InputLabel htmlFor="address">Address</InputLabel>
                 <OutlinedInput
                     id="address"
-                    value={resource.address}
+                    value={resource.address || ''}
                     onChange={handleChange('address')}
                     label="Address"
                 />
             </FormControl>
-            <FormControl required error={!!errors.resource} variant="outlined" className={classes.formControl}>
-                <InputLabel htmlFor="add-resource-outlined">Resource Type</InputLabel>
-                <Select
-                    native
-                    value={coerceToOptions(resource.resource, resourceTypes)}
+            <FormControl
+                component="fieldset"
+                required
+                error={!!errors.resource}
+                fullWidth
+                className={classes.formControl}
+            >
+                <FormLabel component="legend">Resource Type</FormLabel>
+                <RadioGroup
+                    aria-label="resource-type"
+                    name="resource-type"
+                    value={resource.resource || ''}
                     onChange={handleChange('resource')}
-                    label="Resource Type"
-                    inputProps={{
-                        name: 'add-resource',
-                        id: 'add-resource-outlined',
-                    }}
                 >
-                    <option aria-label="None" value="" />
-                    <option value="meal">Free Meals</option>
-                    <option value="grocery">Grocery</option>
-                    <option value="core">Core Service Agency (Basic Emergency and Support Services)</option>
-                </Select>
+                    {makeOptions(resourceTypes)}
+                </RadioGroup>
             </FormControl>
-            <FormControl required error={!!errors.counties} className={classes.formControl}>
+            <FormControl component="fieldset" required error={!!errors.counties} className={classes.formControl}>
                 <FormLabel component="legend">Counties Served</FormLabel>
                 <FormGroup row style={{ padding: "5px" }}>
-                    <FormControlLabel
-                        control={<CompactCheckbox checked={!!resource.alameda} onChange={handleChecked('alameda')} />}
-                        label="Alameda"
-                    />
-                    <FormControlLabel
-                        control={<CompactCheckbox checked={!!resource.santa_clara} onChange={handleChecked('santa_clara')} />}
-                        label="Santa Clara"
-                    />
-                    <FormControlLabel
-                        control={<CompactCheckbox checked={!!resource.san_mateo} onChange={handleChecked('san_mateo')} />}
-                        label="San Mateo"
-                    />
-                    <FormControlLabel
-                        control={<CompactCheckbox checked={!!resource.contra_costa} onChange={handleChecked('contra_costa')} />}
-                        label="Contra Costa"
-                    />
-                    <FormControlLabel
-                        control={<CompactCheckbox checked={!!resource.marin} onChange={handleChecked('marin')} />}
-                        label="Marin"
-                    />
-                    <FormControlLabel
-                        control={<CompactCheckbox checked={!!resource.monterey} onChange={handleChecked('monterey')} />}
-                        label="Monterey"
-                    />
-                    <FormControlLabel
-                        control={<CompactCheckbox checked={!!resource.sonoma} onChange={handleChecked('sonoma')} />}
-                        label="Sonoma"
-                    />
-                    <FormControlLabel
-                        control={<CompactCheckbox checked={!!resource.solano} onChange={handleChecked('solano')} />}
-                        label="Solano"
-                    />
-                    <FormControlLabel
-                        control={<CompactCheckbox checked={!!resource.napa} onChange={handleChecked('napa')} />}
-                        label="Napa"
-                    />
-                    <FormControlLabel
-                        control={<CompactCheckbox checked={!!resource.san_francisco} onChange={handleChecked('san_francisco')} />}
-                        label="San Francisco"
-                    />
+                    {makeCheckboxes(resource, countyNames, handleChecked)}
                 </FormGroup>
                 <FormControlLabel
                     control={(
                         <CompactCheckbox
-                            checked={allCountiesChecked(resource)}
-                            indeterminate={!noCountiesChecked(resource) && !allCountiesChecked(resource)}
+                            checked={allFieldsEqualBool(resource, counties, true)}
+                            indeterminate={
+                                !allFieldsEqualBool(resource, counties, true) &&
+                                !allFieldsEqualBool(resource, counties, false)
+                            }
                             onChange={checkAllCounties}
                         />
                     )}

@@ -7,7 +7,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { LongForm, getErrors } from './LongForm';
+import LongForm from './LongForm';
+import { getResourceErrors } from 'util/Resource';
 
 interface AddEditDialogProps {
     title: string;
@@ -21,7 +22,7 @@ interface AddEditDialogProps {
 
 export const AddEditDialog = (props: AddEditDialogProps) => {
     const { title, description, isOpen, setOpen, resource, setResource, submitHandler } = props;
-    const errors = getErrors(resource);
+    const errors = getResourceErrors(resource);
     const hasErrors = () => {
         for (var prop in errors) {
             return true;
