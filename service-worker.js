@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/bac-volunteer-cms/precache-manifest.ff8e8a5f6cac61098611fc35d109ba42.js"
+  "/bac-volunteer-cms/precache-manifest.7dbff2a06154c4d0f3b36dad6e3d6e52.js"
 );
 
 self.addEventListener('message', (event) => {
