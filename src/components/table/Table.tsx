@@ -11,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { useGlobalFilter, usePagination, useRowSelect, useSortBy, useTable, Column } from 'react-table';
 
+import TablePaginationActions from './TablePaginationActions';
 import TableToolbar from './TableToolbar';
 import { selectColumn } from './Columns';
 
@@ -77,7 +78,6 @@ const Table = (props: TableProps) => {
                                         {column.id !== 'selection' ? (
                                             <TableSortLabel
                                                 active={column.isSorted}
-                                                // react-table has a unsorted state which is not treated here
                                                 direction={column.isSortedDesc ? 'desc' : 'asc'}
                                             />
                                         ) : null}
@@ -109,6 +109,8 @@ const Table = (props: TableProps) => {
                                     5,
                                     10,
                                     25,
+                                    50,
+                                    100,
                                     { label: 'All', value: data.length },
                                 ]}
                                 count={rows.length}
@@ -120,6 +122,7 @@ const Table = (props: TableProps) => {
                                 }}
                                 onChangePage={handleChangePage}
                                 onChangeRowsPerPage={handleChangeRowsPerPage}
+                                ActionsComponent={TablePaginationActions}
                             />
                         </TableRow>
                     </TableFooter>
