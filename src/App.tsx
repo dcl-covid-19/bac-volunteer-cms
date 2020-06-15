@@ -5,7 +5,7 @@ import { Column } from 'react-table';
 
 import Table from 'components/table/Table';
 import { dataColumns } from 'components/table/Columns';
-import * as results from 'constants/grocery.json';
+import * as results from 'constants/meals.json';
 
 function App() {
     const [data, setData] = React.useState(results.rows);
