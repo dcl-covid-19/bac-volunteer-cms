@@ -1,21 +1,18 @@
 {
   "name": "bac-volunteer-cms",
-  "homepage":"https://dcl-covid-19.github.io/bac-volunteer-cms",
+  "homepage": "https://dcl-covid-19.github.io/bac-volunteer-cms",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.10.2",
     "@material-ui/icons": "^4.9.1",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "@types/react-table": "^7.0.19",
     "clsx": "^1.1.1",
-    "gh-pages": "^3.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-hook-form": "^5.7.2",
     "react-scripts": "3.4.1",
-    "react-table": "^7.2.0"
+    "react-table": "^7.2.0",
+    "typeface-roboto": "0.0.75"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -41,6 +38,10 @@
     ]
   },
   "devDependencies": {
+    "@types/react-dom": "^16.9.8",
+    "@types/react-table": "^7.0.19",
+    "@welldone-software/why-did-you-render": "^4.2.5",
+    "gh-pages": "^3.0.0",
     "typescript": "^3.9.5"
   }
 }

@@ -8,41 +8,41 @@ import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
 
 interface SearchProps {
-    onSearchChange: (value: string) => void;
-    globalFilter: any;
+  onSearchChange: (value: string) => void;
+  globalFilter: string;
 };
 
 const Search = (props: SearchProps) => {
-    const { onSearchChange, globalFilter } = props;
-    return (
-        <TextField
-            value={globalFilter || ''}
-            onChange={(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-                onSearchChange(event.target.value);
-            }}
-            placeholder="Search..."
-            InputProps={{
-                startAdornment: (
-                    <InputAdornment position="start">
-                        <Tooltip title="Search">
-                            <SearchIcon fontSize="small" />
-                        </Tooltip>
-                    </InputAdornment>
-                ),
-                endAdornment: (
-                    <InputAdornment position="end">
-                        <IconButton
-                            disabled={!globalFilter}
-                            onClick={() => onSearchChange("")}
-                        >
-                            <ClearIcon fontSize="small" />
-                        </IconButton>
-                    </InputAdornment>
-                ),
-                inputProps: { 'aria-label': "Search" },
-            }}
-        />
-    );
+  const { onSearchChange, globalFilter } = props;
+  return (
+    <TextField
+      value={globalFilter || ''}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+        onSearchChange(event.target.value);
+      }}
+      placeholder="Search..."
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <Tooltip title="Search">
+              <SearchIcon fontSize="small" />
+            </Tooltip>
+          </InputAdornment>
+        ),
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton
+              disabled={!globalFilter}
+              onClick={() => onSearchChange("")}
+            >
+              <ClearIcon fontSize="small" />
+            </IconButton>
+          </InputAdornment>
+        ),
+        inputProps: { 'aria-label': "Search" },
+      }}
+    />
+  );
 };
 
 export default Search;
