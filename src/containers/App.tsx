@@ -15,12 +15,17 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-function App() {
+interface AppProps { }
+
+const App: React.FunctionComponent<AppProps> = () => {
   const classes = useStyles();
-  const [data, setData] = React.useState(results.rows);
-  const columns = React.useMemo(() => COLUMNS, []);
+  const [data, setData] = React.useState<IResource[]>(results.rows);
   const updateRow = (rowIndex: number, resource: IResource) => setData(
-    old => old.map((row, index) => (index === rowIndex ? resource : row))
+    old => old.map((row, index) => (
+      index === rowIndex ?
+        { ...row, ...resource, last_update: new Date() } :
+        row
+    ))
   );
 
   return (
@@ -28,7 +33,7 @@ function App() {
       <Table
         data={data}
         setData={setData}
-        columns={columns}
+        columns={COLUMNS}
         updateRow={updateRow}
       />
     </Box>

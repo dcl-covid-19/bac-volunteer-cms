@@ -16,7 +16,11 @@ const ActionButtonsCell: React.FunctionComponent<ActionButtonsCellProps> =
   const editHandler = (resource: IResource) => updateRow(row.index, resource);
   return (
     <div style={{ display: "flex", flexDirection: "row" as "row" }}>
-      <Checkbox {...row.getToggleRowSelectedProps()} color="primary" />
+      <Checkbox
+        {...row.getToggleRowSelectedProps()}
+        color="primary"
+        style={{ padding: 0 }}
+      />
       <EditButton originalResource={row.original} editHandler={editHandler} />
     </div>
   );

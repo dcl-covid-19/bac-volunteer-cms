@@ -17,13 +17,19 @@ interface ErrorCellProps {
 
 const ErrorCell: React.FunctionComponent<ErrorCellProps> = (props) => {
   const classes = useStyles();
-  const { value, column } = props;
-  const hasErrors = column.id && VALIDATORS[column.id] && !VALIDATORS[column.id](value);
+  const { column } = props;
+  const value = column.id === 'last_update' ? (
+    new Date(props.value).toLocaleString(
+      'en-US', { timeZoneName: 'short' }
+    )
+  ) : props.value;
+  const hasErrors = column.id && VALIDATORS[column.id] &&
+      !VALIDATORS[column.id](value);
 
   return (
     hasErrors ?
       <div className={classes.error}>{value}</div> :
-      (value || null)
+      (value != null ? value.toString() : null)
   );
 };
 

@@ -12,9 +12,7 @@ const ActionButtonsHeader: React.FunctionComponent<ActionButtonsHeaderProps> =
     (props) => {
   const { getToggleAllRowsSelectedProps } = props;
   return (
-    <div>
-      <Checkbox {...getToggleAllRowsSelectedProps()} color="primary" />
-    </div>
+    <Checkbox {...getToggleAllRowsSelectedProps()} color="primary" />
   );
 };
 

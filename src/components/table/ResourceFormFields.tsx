@@ -1,17 +1,11 @@
 import React from 'react';
+import { useFormContext } from 'react-hook-form';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
-import InputLabel from '@material-ui/core/InputLabel';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+import MuiTextField from '@material-ui/core/TextField';
 
-import { allFieldsEqualBool } from 'utils/resource';
-import { IResource, OPTIONS } from 'utils/constants';
+import { HEADERS, OPTIONS, CHECKBOX_GROUPS } from 'utils/constants';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   formControl: {
@@ -19,151 +13,119 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-interface IInputProps {
-  resource: IResource;
+interface InputProps {
   field: string;
-  description: string;
-  handleChange: (
-    (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => void
-  );
-  error?: boolean;
   fullWidth?: boolean;
   required?: boolean;
 }
 
-export const TextInput: React.FunctionComponent<IInputProps> =
-    (props) => {
+export const TextField: React.FunctionComponent<InputProps> = (props) => {
   const classes = useStyles();
-  const { resource, field, description, handleChange, ...formControlProps } =
-      props;
+  const { field, fullWidth, required } = props;
+  const { register, errors } = useFormContext();
+
   return (
-    <FormControl
-      variant="outlined"
+    <MuiTextField
+      fullWidth={fullWidth}
+      required={required}
+      variant="filled"
+      error={!!errors[field]}
+      label={HEADERS[field]}
+      name={field}
+      inputRef={register({ required })}
       className={classes.formControl}
-      {...formControlProps}
-    >
-      <InputLabel htmlFor={field}>{description}</InputLabel>
-      <OutlinedInput
-        id={field}
-        value={resource[field] || ''}
-        onChange={handleChange(field)}
-        label={description}
-      />
-    </FormControl>
+    />
   );
 };
 
-interface IRadioProps extends Omit<IInputProps, 'field'> {
+interface RadioProps extends Omit<InputProps, 'field'> {
   field: keyof typeof OPTIONS;
 }
 
-export const RadioInput: React.FunctionComponent<IRadioProps> =
-    (props) => {
+export const RadioGroup: React.FunctionComponent<RadioProps> = (props) => {
   const classes = useStyles();
-  const { resource, field, description, handleChange, ...formControlProps } =
-      props;
-  const options = Object.keys(OPTIONS[field]).map(option => (
-    <FormControlLabel
-      value={option}
-      control={<Radio color="primary" />}
-      label={(OPTIONS[field] as any)[option]}
-      key={option}
-    />
-  ));
+  const { field, fullWidth, required } = props;
+  const { register, errors } = useFormContext();
+
   return (
     <FormControl
       component="fieldset"
+      fullWidth={fullWidth}
+      required={required}
+      error={!!errors[field]}
       className={classes.formControl}
-      {...formControlProps}
     >
-      <FormLabel component="legend">{description}</FormLabel>
-      <RadioGroup
-        aria-label={field}
-        name={field}
-        value={resource[field] || ''}
-        onChange={handleChange(field)}
-      >
-        {options}
-      </RadioGroup>
+      <FormLabel component="legend">{HEADERS[field]}</FormLabel>
+      {Object.keys(OPTIONS[field]).map(option => (
+        <div>
+          <input
+            type="radio"
+            id={option}
+            key={option}
+            name={field}
+            value={option}
+            ref={register({ required })}
+          />
+          <label htmlFor={option}>
+            {(OPTIONS[field] as any)[option]}
+          </label>
+        </div>
+      ))}
     </FormControl>
   );
 };
 
-interface ICheckboxesInputProps extends Omit<IInputProps, 'field'> {
-  field: keyof typeof OPTIONS;
-  checkAll: (event: React.ChangeEvent<HTMLInputElement>) => void;
+interface CheckboxGroupProps extends Omit<InputProps, 'field'> {
+  field: keyof typeof CHECKBOX_GROUPS;
 }
 
-export const CheckboxesInput: React.FunctionComponent<ICheckboxesInputProps> =
+export const CheckboxGroup: React.FunctionComponent<CheckboxGroupProps> =
     (props) => {
   const classes = useStyles();
-  const {
-    resource,
-    field,
-    description,
-    handleChange,
-    checkAll,
-    ...formControlProps
-  } = props;
-  const keys = Object.keys((OPTIONS as any)[field]);
-  const checkboxes = keys.map(key => (
-    <FormControlLabel
-      control={
-        <Checkbox
-          color="primary"
-          checked={!!resource[key]}
-          onChange={handleChange(key)}
-        />
+  const { field, fullWidth, required } = props;
+  const { register } = useFormContext();
+  return (
+    <FormControl
+      component="fieldset"
+      fullWidth={fullWidth}
+      required={required}
+      className={classes.formControl}
+    >
+      <FormLabel component="legend">
+        {CHECKBOX_GROUPS[field].__header}
+      </FormLabel>
+      {
+        Object.keys(CHECKBOX_GROUPS[field]).filter(
+          option => option !== '__header'
+        ).map(
+          option => (
+            <div>
+              <input
+                type="checkbox"
+                id={option}
+                key={option}
+                name={option}
+                ref={register}
+              />
+              <label htmlFor={option}>
+                {(CHECKBOX_GROUPS[field] as any)[option]}
+              </label>
+            </div>
+          )
+        )
       }
-      label={(OPTIONS as any)[field][key]}
-      key={key}
-    />
-  ));
-  return (
-    <FormControl
-      {...formControlProps}
-      component="fieldset"
-      className={classes.formControl}
-    >
-      <FormLabel component="legend">{description}</FormLabel>
-      <FormGroup row>
-        {checkboxes}
-      </FormGroup>
-      <FormControlLabel
-        control={(
-          <Checkbox
-            color="primary"
-            checked={allFieldsEqualBool(resource, keys, true)}
-            indeterminate={
-              !allFieldsEqualBool(resource, keys, true) &&
-              !allFieldsEqualBool(resource, keys, false)
-            }
-            onChange={checkAll}
-          />
-        )}
-        label="All"
-      />
     </FormControl>
   );
 };
 
-export const CheckboxInput: React.FunctionComponent<IInputProps> =
-    (props) => {
-  const classes = useStyles();
-  const { resource, field, description, handleChange, ...formControlProps } =
-      props;
+export const Checkbox: React.FunctionComponent<InputProps> = (props) => {
+  const { field } = props;
+  const { register } = useFormContext();
+
   return (
-    <FormControl {...formControlProps} className={classes.formControl}>
-      <FormControlLabel
-        control={
-          <Checkbox
-            color="primary"
-            checked={!!resource[field]}
-            onChange={handleChange(field)}
-          />
-        }
-        label={description}
-      />
-    </FormControl>
+    <>
+      <input type="checkbox" name={field} ref={register} />
+      <label htmlFor={field}>{HEADERS[field]}</label>
+    </>
   );
 };

@@ -1,82 +1,40 @@
 import React from 'react';
+import { useFormContext } from 'react-hook-form';
+import { DevTool } from "react-hook-form-devtools";
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import {
-  TextInput,
-  RadioInput,
-  CheckboxesInput,
-  CheckboxInput
-} from 'components/table/ResourceFormFields';
-import { IErrors, setAllFields } from 'utils/resource';
-import { IResource, OPTIONS } from 'utils/constants';
+  TextField,
+  RadioGroup,
+  CheckboxGroup,
+  Checkbox,
+} from './ResourceFormFields';
 
-interface ResourceFormProps {
-  resource: IResource;
-  setResource: (resource: IResource) => void;
-  errors: IErrors;
-};
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  formGroup: {
+    margin: theme.spacing(1),
+  },
+}));
 
-export const ResourceForm = function(props: ResourceFormProps) {
-  const { resource, setResource, errors } = props;
+interface ResourceFormProps { }
 
-  const handleChange =
-      (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setResource({ ...resource, [field]: event.target.value });
-  };
-  const handleChecked =
-      (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setResource({ ...resource, [field]: event.target.checked ? 1 : 0 });
-  };
-  const checkAllCounties =
-      (event: React.ChangeEvent<HTMLInputElement>) => setAllFields(
-    resource,
-    setResource,
-    Object.keys(OPTIONS.county),
-    event.target.checked ? 1 : 0
-  );
-
-  const inputProps = { resource, handleChange };
-  const checkboxProps = { resource, handleChange: handleChecked };
+export const ResourceForm: React.FunctionComponent<ResourceFormProps> =
+    (props) => {
+  const classes = useStyles();
+  const { control } = useFormContext();
 
   return (
     <>
-      <TextInput
-        {...inputProps}
-        required
-        fullWidth
-        error={!!errors.provider_name}
-        field="provider_name"
-        description="Provider Name"
-      />
-      <RadioInput
-        {...inputProps}
-        required
-        fullWidth
-        error={!!errors.resource}
-        field="resource"
-        description="Resource Type"
-      />
-      <CheckboxesInput
-        {...checkboxProps}
-        required
-        fullWidth
-        error={!!errors.counties}
-        field="county"
-        description="Counties Served"
-        checkAll={checkAllCounties}
-      />
-      <TextInput
-        {...inputProps}
-        fullWidth
-        field="address"
-        description="Address"
-      />
-      <CheckboxInput
-        {...checkboxProps}
-        field="bob"
-        description="Black-Owned"
-      />
+      <DevTool control={control} />
+      <TextField fullWidth required field="provider_name" />
+      <RadioGroup required field="resource" />
+      <CheckboxGroup required field="county" />
+      <TextField fullWidth field="address" />
+      <div className={classes.formGroup}>
+        <Checkbox field="bob" />
+      </div>
     </>
   );
-}
+};
 
 export default ResourceForm;

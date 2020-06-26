@@ -1,5 +1,4 @@
 import React from 'react';
-
 import clsx from 'clsx';
 import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -19,7 +18,7 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
       paddingRight: theme.spacing(1),
     },
     highlight: {
-      color: theme.palette.text.primary,
+      color: theme.palette.primary.dark,
       backgroundColor: lighten(theme.palette.primary.light, 0.85),
     },
     title: {
@@ -36,7 +35,7 @@ interface TableToolbarProps {
   deleteHandler: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
-const TableToolbar = (props: TableToolbarProps) => {
+const TableToolbar: React.FunctionComponent<TableToolbarProps> = (props) => {
   const classes = useToolbarStyles();
   const {
     numSelected,

@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { useFormContext } from 'react-hook-form';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -7,39 +7,43 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import Toast from 'components/common/Toast';
 import ResourceForm from './ResourceForm';
-import { getResourceErrors } from 'utils/resource';
-import { IResource } from 'utils/constants';
+import { IResource, HEADERS } from 'utils/constants';
 
 interface ResourceDialogProps {
   title: string;
-  description: string;
+  description?: string;
   isOpen: boolean;
   setOpen: (isOpen: boolean) => void;
-  resource: IResource;
-  setResource: (resource: IResource) => void;
-  submitHandler: (resource: IResource) => void;
+  onSubmit: (resource: IResource) => void;
+  successText: string;
 };
 
-export const ResourceDialog = (props: ResourceDialogProps) => {
-  const { title, description, isOpen, setOpen, resource, setResource, submitHandler } = props;
-  const errors = getResourceErrors(resource);
-
-  const hasErrors = () => {
-    for (const prop in errors) {
-      if (errors.hasOwnProperty(prop)) {
-        return true;
-      }
-    }
-    return false;
-  }
+export const ResourceDialog: React.FunctionComponent<ResourceDialogProps> =
+    (props) => {
+  const { title, description, isOpen, setOpen, onSubmit, successText } = props;
+  const [ errorOpen, setErrorOpen ] = React.useState<boolean>(false);
+  const [ errorText, setErrorText ] = React.useState<string>("");
+  const [ successOpen, setSuccessOpen ] = React.useState<boolean>(false);
   const handleClose = () => setOpen(false);
-  const handleSubmit = (event: React.MouseEvent<HTMLElement>) => {
-    if (!hasErrors()) {
-      submitHandler(resource);
-      setOpen(false);
+  const { handleSubmit, errors, formState } = useFormContext();
+  React.useEffect(() => {
+    const errorFields = Object.keys(errors);
+    if (errorFields.length !== 0) {
+      setErrorText(`The following fields are required: ${
+        errorFields.map(
+          error => HEADERS.hasOwnProperty(error) ?  HEADERS[error] : error
+        ).join(', ')
+      }`);
+      setErrorOpen(true);
+      setSuccessOpen(false);
+    } else if (formState.submitCount > 0) {
+      setSuccessOpen(true);
+      setErrorOpen(false);
     }
-  }
+  // eslint-disable-next-line
+  }, [formState.submitCount])
 
   return (
     <div>
@@ -52,17 +56,33 @@ export const ResourceDialog = (props: ResourceDialogProps) => {
         <DialogTitle id="dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText>{description}</DialogContentText>
-          <ResourceForm resource={resource} setResource={setResource} errors={errors}/>
+          <ResourceForm />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} variant="contained" color="primary" disabled={hasErrors()}>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            variant="contained"
+            color="primary"
+          >
             Submit
           </Button>
         </DialogActions>
       </Dialog>
+      <Toast
+        open={errorOpen}
+        setOpen={setErrorOpen}
+        severity="error"
+        text={errorText}
+      />
+      <Toast
+        open={successOpen}
+        setOpen={setSuccessOpen}
+        severity="success"
+        text={successText}
+      />
     </div>
   )
 }

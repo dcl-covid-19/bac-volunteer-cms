@@ -5,6 +5,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import "typeface-roboto";
 
 import App from 'containers/App';
+import './index.css';
 
 const theme = createMuiTheme();
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import MaUTable from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -25,6 +26,12 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     borderTopColor: "#e0e0e0",
     borderStyle: "solid",
   },
+  header: {
+    backgroundColor: theme.palette.grey['200'],
+  },
+  zebra: {
+    backgroundColor: theme.palette.grey['100'],
+  },
 }));
 
 interface TableProps {
@@ -34,7 +41,7 @@ interface TableProps {
   updateRow: (rowIndex: number, value: IResource) => void;
 };
 
-const Table = (props: TableProps) => {
+const Table: React.FunctionComponent<TableProps> = (props) => {
   const classes = useStyles();
   const { data, setData, columns, updateRow } = props;
   const defaultColumn = { Cell: ErrorCell };
@@ -74,8 +81,9 @@ const Table = (props: TableProps) => {
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => setPageSize(Number(event.target.value));
-  const newResourceHandler =
-      (resource: IResource) => setData(data.concat([resource]));
+  const newResourceHandler = (resource: IResource) => setData(
+    data.concat([{ ...resource, last_update: new Date() }])
+  );
   const removeByIndexs = (
     array: readonly IResource[],
     indexs: number[],
@@ -104,30 +112,45 @@ const Table = (props: TableProps) => {
               <TableRow {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
                   <TableCell
+                    className={classes.header}
+                    padding={
+                      column.id === 'selection' ? "checkbox" : undefined
+                    }
                     {...(column.id === 'selection'
                       ? column.getHeaderProps()
                       : column.getHeaderProps(column.getSortByToggleProps()))}
                   >
-                    {column.render('Header')}
                     {column.id !== 'selection' ? (
                       <TableSortLabel
                         active={column.isSorted}
                         direction={column.isSortedDesc ? 'desc' : 'asc'}
-                      />
-                    ) : null}
+                      >
+                        {column.render('Header')}
+                      </TableSortLabel>
+                    ) : column.render('Header')}
                   </TableCell>
                 ))}
               </TableRow>
             ))}
           </TableHead>
-          <TableBody>
+          <TableBody stripedRows>
             {page.map(row => {
               prepareRow(row);
               return (
-                <TableRow {...row.getRowProps()}>
+                <TableRow
+                  {...row.getRowProps()}
+                  className={clsx({ [classes.zebra]: row.index % 2 })}
+                >
                   {row.cells.map(cell => {
                     return (
-                      <TableCell {...cell.getCellProps()}>
+                      <TableCell
+                        {...cell.getCellProps()}
+                        padding={
+                          cell.column.id === 'selection' ?
+                          "checkbox" :
+                          "default"
+                        }
+                      >
                         {cell.render('Cell')}
                       </TableCell>
                     )
