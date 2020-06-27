@@ -22,11 +22,8 @@ interface ErrorCellProps {
 const ErrorCell: React.FunctionComponent<ErrorCellProps> = (props) => {
   const classes = useStyles();
   const { column } = props;
-  const value = column.id === 'last_update' ? (
-    new Date(props.value).toLocaleString(
-      'en-US', { timeZoneName: 'short' }
-    )
-  ) : props.value;
+  const value = column.id === 'last_update' ?
+      new Date(props.value).toISOString().split('T')[0] : props.value;
   const hasErrors = column.id && VALIDATORS[column.id] &&
       !VALIDATORS[column.id](value);
 

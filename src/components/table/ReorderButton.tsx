@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -23,7 +24,7 @@ const ReorderButton: React.FunctionComponent<ReorderButtonProps> = (props) => {
   const handleClose = () => setOpen(false);
   return (
     <>
-      <Tooltip title="Add/Remove/Reorder Columns">
+      <Tooltip title="Reorder Columns">
         <IconButton size="small" onClick={handleClickOpen}>
           <ViewColumnRoundedIcon />
         </IconButton>
@@ -33,8 +34,9 @@ const ReorderButton: React.FunctionComponent<ReorderButtonProps> = (props) => {
         onClose={handleClose}
         aria-labelledby="dialog-title"
       >
-        <DialogTitle id="dialog-title">Add/Remove/Reorder Columns</DialogTitle>
+        <DialogTitle id="dialog-title">Reorder Columns</DialogTitle>
         <DialogContent>
+          <DialogContentText>Click and drag to reorder.</DialogContentText>
           <ReorderForm lists={lists} setLists={setLists} />
         </DialogContent>
         <DialogActions>

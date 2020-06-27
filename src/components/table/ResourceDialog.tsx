@@ -9,11 +9,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import Toast from 'components/common/Toast';
 import ResourceForm from './ResourceForm';
-import { IResource, HEADERS } from 'utils/constants';
+import { IResource, FORM_FIELDS } from 'utils/constants';
 
 interface ResourceDialogProps {
   title: string;
-  description?: string;
   isOpen: boolean;
   setOpen: (isOpen: boolean) => void;
   onSubmit: (resource: IResource) => void;
@@ -30,7 +29,7 @@ const truncate = (str: string, n: number, useWordBoundary: boolean) => {
 
 export const ResourceDialog: React.FunctionComponent<ResourceDialogProps> =
     (props) => {
-  const { title, description, isOpen, setOpen, onSubmit, successText } = props;
+  const { title, isOpen, setOpen, onSubmit, successText } = props;
   const [ errorOpen, setErrorOpen ] = React.useState<boolean>(false);
   const [ errorText, setErrorText ] = React.useState<string>("");
   const [ successOpen, setSuccessOpen ] = React.useState<boolean>(false);
@@ -39,11 +38,12 @@ export const ResourceDialog: React.FunctionComponent<ResourceDialogProps> =
   React.useEffect(() => {
     const errorFields = Object.keys(errors);
     if (errorFields.length !== 0) {
-      setErrorText(truncate(`Missing required fields: ${
+      setErrorText(truncate(`Errors in: ${
         errorFields.map(
-          error => HEADERS.hasOwnProperty(error) ? HEADERS[error] : error
+          error => FORM_FIELDS.hasOwnProperty(error) ?
+              FORM_FIELDS[error] : error
         ).join(', ')
-      }`, 75, true));
+      }`, 80, true));
       setErrorOpen(true);
       setSuccessOpen(false);
     } else if (formState.submitCount > 0) {
@@ -63,7 +63,7 @@ export const ResourceDialog: React.FunctionComponent<ResourceDialogProps> =
       >
         <DialogTitle id="dialog-title">{title}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{description}</DialogContentText>
+          <DialogContentText>* = required</DialogContentText>
           <ResourceForm />
         </DialogContent>
         <DialogActions>

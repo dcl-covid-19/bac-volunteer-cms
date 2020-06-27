@@ -49,7 +49,6 @@ const NewResourceButton: React.FunctionComponent<NewResourceProps> =
       <FormContext {...methods}>
         <ResourceDialog
           title="New Resource"
-          description="Add a resource to the community map."
           isOpen={isOpen}
           setOpen={setOpen}
           onSubmit={onSubmit}

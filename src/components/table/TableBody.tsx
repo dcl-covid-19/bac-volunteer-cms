@@ -1,6 +1,5 @@
 import React from 'react';
 import { Row } from 'react-table';
-import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import MuiTableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell'
@@ -9,9 +8,11 @@ import TableRow from '@material-ui/core/TableRow';
 import { ACTIONS } from 'utils/constants';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
-  zebra: {
-    backgroundColor: theme.palette.grey['100'],
-  },
+  row: props =>({
+    '&:nth-child(even)': {
+      background: theme.palette.grey['100'],
+    }
+  }),
 }));
 
 interface TableBodyProps {
@@ -30,7 +31,7 @@ const TableBody: React.FunctionComponent<TableBodyProps> = (props) => {
         return (
           <TableRow
             {...row.getRowProps()}
-            className={clsx({ [classes.zebra]: row.index % 2 })}
+            className={classes.row}
           >
             {row.cells.map(cell => {
               return (

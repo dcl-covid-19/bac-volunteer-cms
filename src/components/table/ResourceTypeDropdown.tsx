@@ -16,7 +16,7 @@ export type ResourceType = keyof typeof SIMPLE_OPTIONS.resource | 'all';
 interface ResourceTypeDropdownProps {
   resourceType: ResourceType,
   setResourceType: React.Dispatch<React.SetStateAction<ResourceType>>;
-  setFilter: (columnId: string, filterValue: string) => void;
+  setFilter: (columnId: string, filterValue?: string) => void;
 }
 
 export const ResourceTypeDropdown: (
@@ -26,7 +26,8 @@ export const ResourceTypeDropdown: (
   const { resourceType, setResourceType, setFilter } = props;
   const handleChange = React.useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
-      setFilter('resource', event.target.value);
+      const res = event.target.value;
+      setFilter('resource', res === 'all' ? undefined : res);
       setResourceType(event.target.value as ResourceType);
     },
     [setResourceType, setFilter],
@@ -40,7 +41,7 @@ export const ResourceTypeDropdown: (
       inputProps={{ 'aria-label': 'resource type' }}
       className={classes.select}
     >
-      <option value="all">All Resource</option>
+      <option value="all">All Resources</option>
       {Object.keys(SIMPLE_OPTIONS.resource).map(key => (
         <option value={key}>
           {SIMPLE_OPTIONS.resource[(

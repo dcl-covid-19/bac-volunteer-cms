@@ -1,15 +1,19 @@
 import React from 'react';
+import clsx from 'clsx';
 import { Controller, useFormContext } from 'react-hook-form';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import MuiTextField from '@material-ui/core/TextField';
 
-import { HEADERS, OPTIONS, CHECKBOX_GROUPS } from 'utils/constants';
+import { FORM_FIELDS, OPTIONS, CHECKBOX_GROUPS } from 'utils/constants';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   formControl: {
     margin: theme.spacing(1),
+  },
+  checkboxLabel: {
+    marginRight: theme.spacing(1),
   },
   checkboxError: {
     color: theme.palette.error.main,
@@ -22,18 +26,24 @@ interface InputProps {
   required?: boolean;
 }
 
-export const TextField: React.FunctionComponent<InputProps> = (props) => {
+interface TextProps extends InputProps {
+  type?: string;
+  multiline?: boolean;
+  rowsMax?: number;
+}
+
+export const TextField: React.FunctionComponent<TextProps> = (props) => {
   const classes = useStyles();
-  const { field, fullWidth, required } = props;
+  const { field, required, ...rest } = props;
   const { register, errors } = useFormContext();
 
   return (
     <MuiTextField
-      fullWidth={fullWidth}
+      {...rest}
       required={required}
       variant="filled"
       error={!!errors[field]}
-      label={HEADERS[field]}
+      label={FORM_FIELDS[field]}
       name={field}
       inputRef={register({ required })}
       className={classes.formControl}
@@ -58,7 +68,7 @@ export const RadioGroup: React.FunctionComponent<RadioProps> = (props) => {
       error={!!errors[field]}
       className={classes.formControl}
     >
-      <FormLabel component="legend">{HEADERS[field]}</FormLabel>
+      <FormLabel component="legend">{FORM_FIELDS[field]}</FormLabel>
       {Object.keys(OPTIONS[field]).map(option => (
         <div>
           <input
@@ -135,10 +145,10 @@ export const CheckboxGroup: React.FunctionComponent<CheckboxGroupProps> =
   );
 };
 
-export const RequiredCheckbox: React.FunctionComponent<InputProps> =
+export const Checkbox: React.FunctionComponent<InputProps> =
     (props) => {
   const classes = useStyles();
-  const { field } = props;
+  const { field, required } = props;
   const { control, errors } = useFormContext();
   const [checked, setChecked] = React.useState<boolean>(
     !!control.defaultValuesRef.current[field]
@@ -158,7 +168,11 @@ export const RequiredCheckbox: React.FunctionComponent<InputProps> =
 
   return (
     <>
-      <span className={errors[field] && classes.checkboxError}>
+      <span
+        className={clsx(classes.checkboxLabel, {
+          [classes.checkboxError]: errors[field],
+        })}
+      >
         <Controller
           as={
             <input
@@ -175,22 +189,13 @@ export const RequiredCheckbox: React.FunctionComponent<InputProps> =
           name={field}
           control={control}
           onChange={onChange}
-          rules={{ validate: (x: any) => x != null }}
+          rules={required ? { validate: (x: any) => x != null } : undefined}
         />
-      <label htmlFor={field}>{HEADERS[field]}</label>
+        <label htmlFor={field}>
+          {FORM_FIELDS[field]}
+          {required ? '*' : ''}
+        </label>
       </span>
-    </>
-  );
-};
-
-export const Checkbox: React.FunctionComponent<InputProps> = (props) => {
-  const { field } = props;
-  const { register } = useFormContext();
-
-  return (
-    <>
-      <input type="checkbox" name={field} ref={register} />
-      <label htmlFor={field}>{HEADERS[field]}</label>
     </>
   );
 };

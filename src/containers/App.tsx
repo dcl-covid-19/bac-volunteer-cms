@@ -4,7 +4,7 @@ import Box from '@material-ui/core/Box'
 
 import Table from 'components/table/Table';
 import { IResource, COLUMNS } from 'utils/constants';
-import * as results from 'assets/meals.json';
+import * as results from 'assets/resources.json';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {

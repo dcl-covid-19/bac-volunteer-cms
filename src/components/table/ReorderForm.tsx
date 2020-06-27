@@ -4,9 +4,16 @@ import {
   DraggableLocation,
   DropResult,
 } from "react-beautiful-dnd";
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import { ReorderList, IListResult } from './ReorderList';
+
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  column: {
+    marginRight: theme.spacing(5),
+  },
+}));
 
 const reorder = (list: string[], startIndex: number, endIndex: number) => {
   const result = Array.from(list);
@@ -41,6 +48,7 @@ interface ReorderFormProps {
 }
 
 const ReorderForm: React.FunctionComponent<ReorderFormProps> = (props) => {
+  const classes = useStyles();
   const { lists, setLists } = props;
   const onDragEnd = React.useCallback((result: DropResult) => {
     const { source, destination } = result;
@@ -68,10 +76,16 @@ const ReorderForm: React.FunctionComponent<ReorderFormProps> = (props) => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Typography>Shown</Typography>
-      <ReorderList lists={lists} id="shown" />
-      <Typography>Hidden</Typography>
-      <ReorderList lists={lists} id="hidden" />
+      <div style={{ display: 'flex' }}>
+        <div className={classes.column}>
+          <Typography>Shown</Typography>
+          <ReorderList lists={lists} id="shown" />
+        </div>
+        <div>
+          <Typography>Hidden</Typography>
+          <ReorderList lists={lists} id="hidden" />
+        </div>
+      </div>
     </DragDropContext>
   );
 }

@@ -2,7 +2,7 @@ import React from "react";
 import clsx from 'clsx';
 import { Droppable, Draggable, } from "react-beautiful-dnd";
 import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles';
-import DragHandleIcon from '@material-ui/icons/DragHandle';
+import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 
 import { HEADERS } from 'utils/constants';
 
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     background: lighten(theme.palette.primary.light, 0.85),
   },
   droppable: {
-    minHeight: '1px',
+    minHeight: '20px',
   },
   draggingOver: {
     background: theme.palette.grey['100'],
@@ -52,15 +52,14 @@ export const ReorderList: React.FunctionComponent<ReorderListProps> = (props) =>
                 (provided, snapshot) => (
                   <div
                     {...provided.draggableProps}
+                    {...provided.dragHandleProps}
                     ref={provided.innerRef}
                     style={provided.draggableProps.style}
                     className={clsx(classes.draggable, {
                       [classes.dragging]: snapshot.isDragging,
                     })}
                   >
-                    <div {...provided.dragHandleProps}>
-                      <DragHandleIcon />
-                    </div>
+                    <DragIndicatorIcon color="disabled" fontSize="small" />
                     {HEADERS[item]}
                   </div>
                 )}
