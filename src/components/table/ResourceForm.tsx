@@ -7,8 +7,9 @@ import {
   TextField,
   RadioGroup,
   CheckboxGroup,
-  Checkbox,
+  RequiredCheckbox,
 } from './ResourceFormFields';
+import { RESOURCE_CONDITION } from 'utils/constants';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   formGroup: {
@@ -18,10 +19,11 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 interface ResourceFormProps { }
 
-export const ResourceForm: React.FunctionComponent<ResourceFormProps> =
-    (props) => {
+export const ResourceForm: React.FunctionComponent<ResourceFormProps> = 
+    () => {
   const classes = useStyles();
-  const { control } = useFormContext();
+  const { control, watch } = useFormContext();
+  const resource = watch('resource');
 
   return (
     <>
@@ -29,9 +31,11 @@ export const ResourceForm: React.FunctionComponent<ResourceFormProps> =
       <TextField fullWidth required field="provider_name" />
       <RadioGroup required field="resource" />
       <CheckboxGroup required field="county" />
+      {RESOURCE_CONDITION.payment.includes(resource) &&
+          <RadioGroup required field="payment" />}
       <TextField fullWidth field="address" />
       <div className={classes.formGroup}>
-        <Checkbox field="bob" />
+        <RequiredCheckbox field="bob" />
       </div>
     </>
   );

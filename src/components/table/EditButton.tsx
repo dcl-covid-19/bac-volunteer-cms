@@ -5,7 +5,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import EditIcon from '@material-ui/icons/Edit';
 
 import { ResourceDialog } from './ResourceDialog';
-import { toBoolean, fromBoolean } from 'utils/resource';
+import { toForm, fromForm } from 'utils/resource';
 import { IResource } from 'utils/constants';
 
 
@@ -17,7 +17,7 @@ interface EditButtonProps {
 const EditButton: React.FunctionComponent<EditButtonProps> = (props) => {
   const { originalResource, editHandler } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
-  const initialForm = toBoolean(originalResource);
+  const initialForm = toForm(originalResource);
   const methods = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
@@ -31,7 +31,7 @@ const EditButton: React.FunctionComponent<EditButtonProps> = (props) => {
     setOpen(true);
   }
   const onSubmit = (resource: IResource) => {
-    editHandler(fromBoolean(resource));
+    editHandler(fromForm(resource));
     setOpen(false);
   };
 

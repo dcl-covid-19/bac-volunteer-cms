@@ -1,6 +1,9 @@
 import React from 'react';
 
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import {
+  TablePaginationActionsProps
+} from '@material-ui/core/TablePagination/TablePaginationActions';
 import IconButton from '@material-ui/core/IconButton';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
@@ -16,17 +19,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface TablePaginationActionsProps {
-  count: number;
-  page: number;
-  rowsPerPage: number;
-  onChangePage: (
-    event: React.MouseEvent<HTMLButtonElement>,
-    newPage: number
-  ) => void;
-};
-
-function TablePaginationActions(props: TablePaginationActionsProps) {
+const TablePaginationActions: (
+  React.FunctionComponent<TablePaginationActionsProps>
+) = (props) => {
   const classes = useStyles();
   const { count, page, rowsPerPage, onChangePage } = props;
 

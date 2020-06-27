@@ -7,6 +7,10 @@ import { VALIDATORS } from 'utils/constants';
 const useStyles = makeStyles(theme => ({
   error: {
     background: theme.palette.error.light,
+    width: '100%',
+    height: '100%',
+    minWidth: '100%',
+    minHeight: '100%',
   },
 }));
 
@@ -28,7 +32,7 @@ const ErrorCell: React.FunctionComponent<ErrorCellProps> = (props) => {
 
   return (
     hasErrors ?
-      <div className={classes.error}>{value}</div> :
+      <div className={classes.error}>{value}{'\xa0'}</div> :
       (value != null ? value.toString() : null)
   );
 };

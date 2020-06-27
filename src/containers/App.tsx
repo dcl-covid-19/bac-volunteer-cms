@@ -20,13 +20,17 @@ interface AppProps { }
 const App: React.FunctionComponent<AppProps> = () => {
   const classes = useStyles();
   const [data, setData] = React.useState<IResource[]>(results.rows);
-  const updateRow = (rowIndex: number, resource: IResource) => setData(
-    old => old.map((row, index) => (
-      index === rowIndex ?
-        { ...row, ...resource, last_update: new Date() } :
-        row
-    ))
-  );
+  const skipPageResetRef = React.useRef<boolean>();
+  const updateRow = (rowIndex: number, resource: IResource) => {
+    skipPageResetRef.current = true;
+    setData(
+      old => old.map((row, index) => (
+        index === rowIndex ?
+          { ...row, ...resource, last_update: new Date() } :
+          row
+      ))
+    );
+  };
 
   return (
     <Box className={classes.root}>
@@ -35,6 +39,7 @@ const App: React.FunctionComponent<AppProps> = () => {
         setData={setData}
         columns={COLUMNS}
         updateRow={updateRow}
+        skipPageResetRef={skipPageResetRef}
       />
     </Box>
   );;

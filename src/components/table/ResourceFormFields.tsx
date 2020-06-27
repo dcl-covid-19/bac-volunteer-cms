@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -10,6 +10,9 @@ import { HEADERS, OPTIONS, CHECKBOX_GROUPS } from 'utils/constants';
 const useStyles = makeStyles((theme: Theme) => createStyles({
   formControl: {
     margin: theme.spacing(1),
+  },
+  checkboxError: {
+    color: theme.palette.error.main,
   },
 }));
 
@@ -39,7 +42,7 @@ export const TextField: React.FunctionComponent<InputProps> = (props) => {
 };
 
 interface RadioProps extends Omit<InputProps, 'field'> {
-  field: keyof typeof OPTIONS;
+  field: string;
 }
 
 export const RadioGroup: React.FunctionComponent<RadioProps> = (props) => {
@@ -83,29 +86,43 @@ export const CheckboxGroup: React.FunctionComponent<CheckboxGroupProps> =
     (props) => {
   const classes = useStyles();
   const { field, fullWidth, required } = props;
-  const { register } = useFormContext();
+  const { register, errors, setValue, triggerValidation } = useFormContext();
+  const setAll = React.useCallback(() => {
+    setValue(field, Object.keys(CHECKBOX_GROUPS[field]));
+    triggerValidation(field);
+  }, [setValue, triggerValidation, field]);
+  const setNone = React.useCallback(() => {
+    setValue(field, []);
+    triggerValidation(field);
+  }, [setValue, triggerValidation, field]);
   return (
     <FormControl
       component="fieldset"
       fullWidth={fullWidth}
       required={required}
+      error={!!errors[field]}
       className={classes.formControl}
     >
       <FormLabel component="legend">
         {CHECKBOX_GROUPS[field].__header}
       </FormLabel>
+      <div style={{ display: 'flex' }}>
+        <button onClick={setAll}>All</button>
+        <button onClick={setNone}>None</button>
+      </div>
       {
         Object.keys(CHECKBOX_GROUPS[field]).filter(
           option => option !== '__header'
         ).map(
-          option => (
+          (option) => (
             <div>
               <input
                 type="checkbox"
                 id={option}
                 key={option}
-                name={option}
-                ref={register}
+                value={option}
+                name={field}
+                ref={register({ required })}
               />
               <label htmlFor={option}>
                 {(CHECKBOX_GROUPS[field] as any)[option]}
@@ -115,6 +132,54 @@ export const CheckboxGroup: React.FunctionComponent<CheckboxGroupProps> =
         )
       }
     </FormControl>
+  );
+};
+
+export const RequiredCheckbox: React.FunctionComponent<InputProps> =
+    (props) => {
+  const classes = useStyles();
+  const { field } = props;
+  const { control, errors } = useFormContext();
+  const [checked, setChecked] = React.useState<boolean>(
+    !!control.defaultValuesRef.current[field]
+  );
+  const [indeterminate, setIndeterminate] = React.useState<boolean>(
+    control.defaultValuesRef.current[field] == null
+  );
+  const onChange = React.useCallback(
+    ([event]: React.ChangeEvent<HTMLInputElement>[]) => {
+      const checked = !indeterminate && event.target.checked;
+      setChecked(checked);
+      setIndeterminate(false);
+      return checked;
+    },
+    [indeterminate, setChecked, setIndeterminate],
+  );
+
+  return (
+    <>
+      <span className={errors[field] && classes.checkboxError}>
+        <Controller
+          as={
+            <input
+              ref={input => {
+                if (input) {
+                  input.indeterminate = indeterminate;
+                }
+              }}
+              checked={checked}
+              id={field}
+              type="checkbox"
+            />
+          }
+          name={field}
+          control={control}
+          onChange={onChange}
+          rules={{ validate: (x: any) => x != null }}
+        />
+      <label htmlFor={field}>{HEADERS[field]}</label>
+      </span>
+    </>
   );
 };
 

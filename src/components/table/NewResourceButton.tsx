@@ -1,12 +1,20 @@
 import React from 'react';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { useForm, FormContext } from 'react-hook-form';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import AddBoxIcon from '@material-ui/icons/AddBox';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import AddIcon from '@material-ui/icons/Add';
 
 import { ResourceDialog } from './ResourceDialog';
-import { fromBoolean } from 'utils/resource';
+import { fromForm } from 'utils/resource';
 import { IResource } from 'utils/constants';
+
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  button: {
+    textTransform: "none",
+    margin: theme.spacing(1),
+  },
+}));
 
 interface NewResourceProps {
   newResourceHandler: (resource: IResource) => void;
@@ -14,6 +22,7 @@ interface NewResourceProps {
 
 const NewResourceButton: React.FunctionComponent<NewResourceProps> =
     (props) => {
+  const classes = useStyles();
   const { newResourceHandler } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const methods = useForm<IResource>({
@@ -22,17 +31,21 @@ const NewResourceButton: React.FunctionComponent<NewResourceProps> =
   });
   const handleClickOpen = () => setOpen(true);
   const onSubmit = (resource: IResource) => {
-    newResourceHandler(fromBoolean(resource));
+    newResourceHandler(fromForm(resource));
     setOpen(false);
   };
 
   return (
     <div>
-      <Tooltip title="New Resource">
-        <IconButton aria-label="New Resource" onClick={handleClickOpen}>
-          <AddBoxIcon />
-        </IconButton>
-      </Tooltip>
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<AddIcon />}
+        className={classes.button}
+        onClick={handleClickOpen}
+      >
+        <Typography noWrap>New Resource</Typography>
+      </Button>
       <FormContext {...methods}>
         <ResourceDialog
           title="New Resource"

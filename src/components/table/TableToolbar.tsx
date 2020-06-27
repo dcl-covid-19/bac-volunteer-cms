@@ -7,7 +7,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import FilterButton from './FilterButton';
 import NewResourceButton from './NewResourceButton';
+import ReorderButton from './ReorderButton';
 import Search from './Search';
 import { IResource } from 'utils/constants';
 
@@ -33,6 +35,10 @@ interface TableToolbarProps {
   setGlobalFilter: (filterValue: string) => void;
   newResourceHandler: (resource: IResource) => void;
   deleteHandler: (event: React.MouseEvent<HTMLElement>) => void;
+  columnOrder: string[];
+  setColumnOrder: (updater: any) => void;
+  setHiddenColumns: (updater: any) => void;
+  skipPageResetRef: React.MutableRefObject<boolean | undefined>;
 }
 
 const TableToolbar: React.FunctionComponent<TableToolbarProps> = (props) => {
@@ -42,7 +48,11 @@ const TableToolbar: React.FunctionComponent<TableToolbarProps> = (props) => {
     globalFilter,
     setGlobalFilter,
     newResourceHandler,
-    deleteHandler
+    deleteHandler,
+    columnOrder,
+    setColumnOrder,
+    setHiddenColumns,
+    skipPageResetRef,
   } = props;
   const selected = numSelected > 0;
   const onSearchChange = (value: string) => setGlobalFilter(value);
@@ -81,6 +91,13 @@ const TableToolbar: React.FunctionComponent<TableToolbarProps> = (props) => {
       ) : (
         <>
           <Search onSearchChange={onSearchChange} globalFilter={globalFilter}/>
+          <FilterButton />
+          <ReorderButton
+            columnOrder={columnOrder}
+            setColumnOrder={setColumnOrder}
+            setHiddenColumns={setHiddenColumns}
+            skipPageResetRef={skipPageResetRef}
+          />
           <NewResourceButton newResourceHandler={newResourceHandler}/>
         </>
       )}

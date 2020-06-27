@@ -2,6 +2,24 @@ import { Column } from 'react-table';
 
 export type IResource = any;
 
+const SIMPLE_HEADERS = Object.freeze({
+  "resource": "Resource",
+  "accepts_medical": "Accepts Medi-Cal",
+  "provider_name": "Provider Name",
+  "provider_addloc": "Provider Location/Branch",
+  "contact": "Phone Number",
+  "call_in_advance": "Call In Advance",
+  "region": "Region",
+  "bob": "Black-Owned",
+  "last_update": "Last Updated",
+  "email": "Provider email",
+  "notes": "Notes",
+  "notes_es": "Notes (Spanish)",
+  "web_link": "Website",
+  "web_link_es": "Website (Spanish)",
+  "status": "Status",
+});
+
 export const CHECKBOX_GROUPS = Object.freeze({
   "county": {
     "__header": "Counties Served",
@@ -18,47 +36,16 @@ export const CHECKBOX_GROUPS = Object.freeze({
   },
 });
 
-const SIMPLE_HEADERS = Object.freeze({
-  "last_update": "Last Updated",
-  "provider_name": "Provider Name",
-  "resource": "Resource",
-  "region": "Region",
-  "address": "Address",
-  "bob": "Black-Owned",
+export const RADIO_GROUPS = Object.freeze({
+  "payment": {
+    "__header": "Payment Type",
+    "free": "Free",
+    "sliding_scale": "Sliding Scale",
+    "financial_assistance": "Discounts Available",
+  }
 });
 
-const HEADERS_PLUS_CHECKBOX = Object.keys(CHECKBOX_GROUPS).reduce(
-  (acc: object, field: string) => ({
-    ...acc,
-    ...CHECKBOX_GROUPS[field as keyof typeof CHECKBOX_GROUPS],
-  }),
-  SIMPLE_HEADERS as object,
-);
-
-const { __header, ...HEADERS } = HEADERS_PLUS_CHECKBOX as any;
-export { HEADERS };
-
-export const COLUMNS: readonly Column<Object>[] = Object.freeze(
-  Object.keys(SIMPLE_HEADERS).map(
-    key => ({ Header: HEADERS[key], accessor: key })
-  ),
-) as readonly Column<Object>[];
-
-export const BOOLEAN_COLUMNS: readonly string[] = Object.freeze([
-  "bob",
-  "alameda",
-  "santa_clara",
-  "san_mateo",
-  "contra_costa",
-  "marin",
-  "monterey",
-  "sonoma",
-  "solano",
-  "napa",
-  "san_francisco",
-]);
-
-export const OPTIONS = Object.freeze({
+const SIMPLE_OPTIONS = Object.freeze({
   "resource": {
     "meal": "Free Food Provider",
     "grocery": "Grocery Provider",
@@ -71,7 +58,117 @@ export const OPTIONS = Object.freeze({
   },
 });
 
+export const RESOURCE_CONDITION = Object.freeze({
+  "payment": ["health", "legal_assistance", "legal_general_info"],
+});
+
+export const NESTED_GROUPS = Object.freeze({ ...CHECKBOX_GROUPS, ...RADIO_GROUPS });
+
+export const COMBO_COLUMNS = Object.freeze([
+  {
+    Header: "Address",
+    id: "address",
+    accessor: (row: IResource) => (
+      `${row.address}, ${row.city}, ${row.state} ${row.zip}`
+    ),
+  },
+  {
+    Header: "Opening Hours",
+    id: "opening_hours",
+    accessor: (row: IResource) => ([
+      row.mon && row.mon !== '0' && `Monday ${row.mon}`,
+      row.tues && row.tues !== '0' && `Tuesday ${row.tues}`,
+      row.wed && row.wed !== '0' && `Wednesday ${row.wed}`,
+      row.thr && row.thr !== '0' && `Thursday ${row.thr}`,
+      row.fri && row.fri !== '0' && `Friday ${row.fri}`,
+      row.sat && row.sat !== '0' && `Saturday ${row.sat}`,
+      row.sun && row.sun !== '0' && `Sunday ${row.sun}`,
+    ].filter(x => !!x).join(', ')),
+  },
+]);
+
+export const BOOLEAN_COLUMNS: readonly string[] = Object.freeze([
+  "accepts_medical",
+  "call_in_advance",
+  "bob",
+]);
+
+export const DEFAULT_SHOWN = Object.freeze([
+  "provider_name",
+  "resource",
+  "county",
+  "payment",
+  "last_update",
+]);
+
+const NESTED_HEADERS = Object.keys(NESTED_GROUPS).reduce(
+  (acc: object, field: string) => ({
+    ...acc,
+    [field]: NESTED_GROUPS[field as keyof typeof CHECKBOX_GROUPS].__header,
+  }),
+  {},
+);
+
+const COMBO_HEADERS = COMBO_COLUMNS.reduce(
+  (acc: object, column: Column<Object>) => ({
+    ...acc,
+    [column.id as string]: column.Header,
+  }),
+  {},
+);
+
+export const HEADERS: any = Object.freeze({
+  ...SIMPLE_HEADERS,
+  ...NESTED_HEADERS,
+  ...COMBO_HEADERS,
+});
+
+const SIMPLE_COLUMNS: readonly Column<Object>[] = Object.freeze(
+  Object.keys(SIMPLE_HEADERS).map(
+    key => ({ Header: (SIMPLE_HEADERS as any)[key], accessor: key })
+  ),
+) as readonly Column<Object>[];
+
+const NESTED_COLUMNS: readonly Column<Object>[] = Object.freeze(
+  Object.keys(NESTED_GROUPS).map(
+    key => ({
+      Header: HEADERS[key],
+      accessor: (row: IResource) => {
+        return Object.keys((NESTED_GROUPS as any)[key]).filter(
+          field => field !== '__header' && row[field]
+        ).map(
+          field => (NESTED_GROUPS as any)[key][field]
+        ).join(', ')
+      },
+      id: key,
+    })
+  ),
+) as readonly Column<Object>[];
+
+export const COLUMNS = Object.freeze([
+  ...SIMPLE_COLUMNS,
+  ...NESTED_COLUMNS,
+  ...COMBO_COLUMNS,
+]);
+
+export const FLAT_OPTIONS = Object.keys(RADIO_GROUPS).reduce(
+  (acc: object, field: string) => {
+    const group = RADIO_GROUPS[field as keyof typeof RADIO_GROUPS];
+    const { __header, ...rest } = group;
+    return { ...acc, [field]: rest };
+  },
+  {}
+);
+
+export const OPTIONS: any = Object.freeze({
+  ...SIMPLE_OPTIONS,
+  ...FLAT_OPTIONS,
+});
+
 export const VALIDATORS: any = Object.freeze({
   'provider_name': (name: string) => !!name,
   'resource': (resource: string) => OPTIONS.resource.hasOwnProperty(resource),
+  'county': (county: string) => !!county,
+  'payment': (payment: string) => !!payment && !payment.includes(','),
+  'bob': (bob?: number | null) => bob != null,
 });

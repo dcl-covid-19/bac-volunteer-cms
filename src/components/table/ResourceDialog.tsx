@@ -20,6 +20,14 @@ interface ResourceDialogProps {
   successText: string;
 };
 
+const truncate = (str: string, n: number, useWordBoundary: boolean) => {
+  if (str.length <= n) { return str; }
+  const subString = str.substr(0, n-1);
+  return (useWordBoundary
+    ? subString.substr(0, subString.lastIndexOf(" ")) 
+    : subString) + "...";
+};
+
 export const ResourceDialog: React.FunctionComponent<ResourceDialogProps> =
     (props) => {
   const { title, description, isOpen, setOpen, onSubmit, successText } = props;
@@ -31,11 +39,11 @@ export const ResourceDialog: React.FunctionComponent<ResourceDialogProps> =
   React.useEffect(() => {
     const errorFields = Object.keys(errors);
     if (errorFields.length !== 0) {
-      setErrorText(`The following fields are required: ${
+      setErrorText(truncate(`Missing required fields: ${
         errorFields.map(
-          error => HEADERS.hasOwnProperty(error) ?  HEADERS[error] : error
+          error => HEADERS.hasOwnProperty(error) ? HEADERS[error] : error
         ).join(', ')
-      }`);
+      }`, 75, true));
       setErrorOpen(true);
       setSuccessOpen(false);
     } else if (formState.submitCount > 0) {

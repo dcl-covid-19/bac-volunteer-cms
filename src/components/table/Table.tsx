@@ -1,22 +1,26 @@
 import React from 'react';
-import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import MaUTable from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import { useGlobalFilter, usePagination, useRowSelect, useSortBy, useTable, Column } from 'react-table';
+import {
+  useColumnOrder,
+  useGlobalFilter,
+  usePagination,
+  useRowSelect,
+  useSortBy,
+  useTable,
+  Column
+} from 'react-table';
 
 import ActionButtonsCell from './ActionButtonsCell';
 import ActionButtonsHeader from './ActionButtonsHeader';
 import ErrorCell from './ErrorCell';
+import TableBody from './TableBody';
+import TableHeader from './TableHeader';
 import TablePaginationActions from './TablePaginationActions';
 import TableToolbar from './TableToolbar';
-import { IResource } from 'utils/constants';
+import { IResource, DEFAULT_SHOWN, HEADERS } from 'utils/constants';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   footer: {
@@ -26,12 +30,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     borderTopColor: "#e0e0e0",
     borderStyle: "solid",
   },
-  header: {
-    backgroundColor: theme.palette.grey['200'],
-  },
-  zebra: {
-    backgroundColor: theme.palette.grey['100'],
-  },
 }));
 
 interface TableProps {
@@ -39,14 +37,18 @@ interface TableProps {
   data: readonly IResource[];
   setData: (data: IResource[]) => void;
   updateRow: (rowIndex: number, value: IResource) => void;
+  skipPageResetRef: React.MutableRefObject<boolean | undefined>;
 };
 
 const Table: React.FunctionComponent<TableProps> = (props) => {
   const classes = useStyles();
-  const { data, setData, columns, updateRow } = props;
+  const { data, setData, columns, updateRow, skipPageResetRef } = props;
+  React.useEffect(() => {
+    skipPageResetRef.current = false;
+  });
   const defaultColumn = { Cell: ErrorCell };
   const actionsColumn = {
-    id: 'selection',
+    id: 'actions',
     Header: ActionButtonsHeader,
     Cell: ActionButtonsCell,
   };
@@ -57,20 +59,33 @@ const Table: React.FunctionComponent<TableProps> = (props) => {
     rows,
     page,
     gotoPage,
+    setColumnOrder,
+    setHiddenColumns,
     setPageSize,
     setGlobalFilter,
-    state: { pageIndex, pageSize, selectedRowIds, globalFilter },
+    state: { columnOrder, pageIndex, pageSize, selectedRowIds, globalFilter },
   } = useTable(
     {
       columns: columns as Column<Object>[],
       data: data as Object[],
       defaultColumn,
-      updateRow
+      initialState: {
+        columnOrder: ['actions', ...DEFAULT_SHOWN],
+        hiddenColumns: Object.keys(HEADERS).filter(
+          key => !DEFAULT_SHOWN.includes(key)
+        ),
+      },
+      autoResetPage: !skipPageResetRef.current,
+      autoResetSortBy: !skipPageResetRef.current,
+      autoResetFilters: !skipPageResetRef.current,
+      autoResetGlobalFilter: !skipPageResetRef.current,
+      updateRow,
     },
     useGlobalFilter,
     useSortBy,
     usePagination,
     useRowSelect,
+    useColumnOrder,
     hooks => hooks.allColumns.push(columns => [actionsColumn, ...columns]),
   );
 
@@ -81,14 +96,16 @@ const Table: React.FunctionComponent<TableProps> = (props) => {
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => setPageSize(Number(event.target.value));
-  const newResourceHandler = (resource: IResource) => setData(
-    data.concat([{ ...resource, last_update: new Date() }])
-  );
+  const newResourceHandler = (resource: IResource) => {
+    skipPageResetRef.current = true;
+    setData(data.concat([{ ...resource, last_update: new Date() }]));
+  }
   const removeByIndexs = (
     array: readonly IResource[],
     indexs: number[],
   ) => array.filter((_, i) => !indexs.includes(i));
   const deleteHandler = (event: React.MouseEvent<HTMLElement>) => {
+    skipPageResetRef.current = true;
     const newData = removeByIndexs(
       data,
       Object.keys(selectedRowIds).map(x => parseInt(x, 10)),
@@ -104,61 +121,15 @@ const Table: React.FunctionComponent<TableProps> = (props) => {
         setGlobalFilter={setGlobalFilter}
         newResourceHandler={newResourceHandler}
         deleteHandler={deleteHandler}
+        columnOrder={columnOrder}
+        setColumnOrder={setColumnOrder}
+        setHiddenColumns={setHiddenColumns}
+        skipPageResetRef={skipPageResetRef}
       />
       <TableContainer>
         <MaUTable {...getTableProps()} stickyHeader size="small">
-          <TableHead>
-            {headerGroups.map(headerGroup => (
-              <TableRow {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  <TableCell
-                    className={classes.header}
-                    padding={
-                      column.id === 'selection' ? "checkbox" : undefined
-                    }
-                    {...(column.id === 'selection'
-                      ? column.getHeaderProps()
-                      : column.getHeaderProps(column.getSortByToggleProps()))}
-                  >
-                    {column.id !== 'selection' ? (
-                      <TableSortLabel
-                        active={column.isSorted}
-                        direction={column.isSortedDesc ? 'desc' : 'asc'}
-                      >
-                        {column.render('Header')}
-                      </TableSortLabel>
-                    ) : column.render('Header')}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableHead>
-          <TableBody stripedRows>
-            {page.map(row => {
-              prepareRow(row);
-              return (
-                <TableRow
-                  {...row.getRowProps()}
-                  className={clsx({ [classes.zebra]: row.index % 2 })}
-                >
-                  {row.cells.map(cell => {
-                    return (
-                      <TableCell
-                        {...cell.getCellProps()}
-                        padding={
-                          cell.column.id === 'selection' ?
-                          "checkbox" :
-                          "default"
-                        }
-                      >
-                        {cell.render('Cell')}
-                      </TableCell>
-                    )
-                  })}
-                </TableRow>
-              )
-            })}
-          </TableBody>
+          <TableHeader headerGroups={headerGroups} />
+          <TableBody page={page} prepareRow={prepareRow} />
         </MaUTable>
       </TableContainer>
       <TablePagination

@@ -12,7 +12,7 @@ interface SearchProps {
   globalFilter: string;
 };
 
-const Search = (props: SearchProps) => {
+const Search: React.FunctionComponent<SearchProps> = (props) => {
   const { onSearchChange, globalFilter } = props;
   return (
     <TextField
