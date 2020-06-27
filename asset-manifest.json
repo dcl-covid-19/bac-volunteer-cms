@@ -1,22 +1,26 @@
 {
   "files": {
-    "main.css": "/bac-volunteer-cms/static/css/main.3fd04b9d.chunk.css",
-    "main.js": "/bac-volunteer-cms/static/js/main.cb5e7e77.chunk.js",
-    "main.js.map": "/bac-volunteer-cms/static/js/main.cb5e7e77.chunk.js.map",
+    "main.css": "/bac-volunteer-cms/static/css/main.ee115e05.chunk.css",
+    "main.js": "/bac-volunteer-cms/static/js/main.6658fb7d.chunk.js",
+    "main.js.map": "/bac-volunteer-cms/static/js/main.6658fb7d.chunk.js.map",
     "runtime-main.js": "/bac-volunteer-cms/static/js/runtime-main.d4c9100f.js",
     "runtime-main.js.map": "/bac-volunteer-cms/static/js/runtime-main.d4c9100f.js.map",
-    "static/js/2.2717b66b.chunk.js": "/bac-volunteer-cms/static/js/2.2717b66b.chunk.js",
-    "static/js/2.2717b66b.chunk.js.map": "/bac-volunteer-cms/static/js/2.2717b66b.chunk.js.map",
+    "static/css/2.9a1d88b1.chunk.css": "/bac-volunteer-cms/static/css/2.9a1d88b1.chunk.css",
+    "static/js/2.6520ff2f.chunk.js": "/bac-volunteer-cms/static/js/2.6520ff2f.chunk.js",
+    "static/js/2.6520ff2f.chunk.js.map": "/bac-volunteer-cms/static/js/2.6520ff2f.chunk.js.map",
     "index.html": "/bac-volunteer-cms/index.html",
-    "precache-manifest.82b3270ad3366edf92505ebd2b8347a3.js": "/bac-volunteer-cms/precache-manifest.82b3270ad3366edf92505ebd2b8347a3.js",
+    "precache-manifest.75e10aab633296e54cc7e6d38b21f95c.js": "/bac-volunteer-cms/precache-manifest.75e10aab633296e54cc7e6d38b21f95c.js",
     "service-worker.js": "/bac-volunteer-cms/service-worker.js",
-    "static/css/main.3fd04b9d.chunk.css.map": "/bac-volunteer-cms/static/css/main.3fd04b9d.chunk.css.map",
-    "static/js/2.2717b66b.chunk.js.LICENSE.txt": "/bac-volunteer-cms/static/js/2.2717b66b.chunk.js.LICENSE.txt"
+    "static/css/2.9a1d88b1.chunk.css.map": "/bac-volunteer-cms/static/css/2.9a1d88b1.chunk.css.map",
+    "static/css/main.ee115e05.chunk.css.map": "/bac-volunteer-cms/static/css/main.ee115e05.chunk.css.map",
+    "static/js/2.6520ff2f.chunk.js.LICENSE.txt": "/bac-volunteer-cms/static/js/2.6520ff2f.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/bac-volunteer-cms/static/media/roboto-latin-900italic.ebf6d164.woff2"
   },
   "entrypoints": [
     "static/js/runtime-main.d4c9100f.js",
-    "static/js/2.2717b66b.chunk.js",
-    "static/css/main.3fd04b9d.chunk.css",
-    "static/js/main.cb5e7e77.chunk.js"
+    "static/css/2.9a1d88b1.chunk.css",
+    "static/js/2.6520ff2f.chunk.js",
+    "static/css/main.ee115e05.chunk.css",
+    "static/js/main.6658fb7d.chunk.js"
   ]
 }

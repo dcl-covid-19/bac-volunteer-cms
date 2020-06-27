@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.css"],"names":[],"mappings":"AAAA,gBACI,WAAY,CACZ,UACJ,CAEA,OACI,eACJ,CAEA,OACI,QAAS,CACT,SACJ","file":"main.ee115e05.chunk.css","sourcesContent":["html, body, #root {\n    height: 100%;\n    width: 100%;\n}\n\n#outer {\n    min-height: 100%;\n}\n\nbody, p {\n    margin: 0;\n    padding: 0;\n}\n"]}
