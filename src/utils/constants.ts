@@ -325,7 +325,7 @@ export const VALIDATORS: any = Object.freeze({
   'county': (county: string) => !!county,
   'payment': (payment: string) => !!payment && !payment.includes(','),
   'call_in_advance': (call_in_advance?: number | null) => call_in_advance != null,
-  'contact': (contact: string) => !!contact,
+  'contact': (contact: string) => !!contact && contact.length > 1,
   'notes': (notes: string) => !!notes,
   'accepts_medical': (accepts_medical?: number | null) => accepts_medical != null,
   'opening_hours': (opening_hours: string) => !!opening_hours,

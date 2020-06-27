@@ -191,7 +191,7 @@ export const Checkbox: React.FunctionComponent<InputProps> =
         />
         <label htmlFor={field}>
           {FORM_FIELDS[field]}
-          {required ? '*' : ''}
+          {required ? ' *' : ''}
         </label>
       </span>
     </>

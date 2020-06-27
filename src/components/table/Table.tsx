@@ -22,7 +22,7 @@ import TableHeader from './TableHeader';
 import TablePaginationActions from './TablePaginationActions';
 import TableToolbar from './TableToolbar';
 import { IResource, ACTIONS, DEFAULT_SHOWN } from 'utils/constants';
-import { applyResourceConditions, complement } from 'utils/resource';
+import { applyResourceConditions, complement, timestamps } from 'utils/resource';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   footer: {
@@ -99,15 +99,8 @@ const Table: React.FunctionComponent<TableProps> = (props) => {
   const newResourceHandler = (resource: IResource) => {
     skipPageResetRef.current = true;
     const now = new Date();
-    const stamps = Object.keys(resource).filter(
-      field => !!resource[field]
-    ).reduce(
-      (acc: object, field: any) => ({
-        ...acc,
-        [`${field}_last_updated`]: now,
-      }),
-      {},
-    );
+    const edited = (field: string) => !!resource[field];
+    const stamps = timestamps(resource, edited, now);
     setData(data.concat([{ ...resource, ...stamps, last_update: now }]));
   }
   const removeByIndexs = (

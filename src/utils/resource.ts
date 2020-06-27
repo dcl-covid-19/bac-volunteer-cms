@@ -115,3 +115,17 @@ export const lastUpdated = (resource: IResource, field: string) => {
     return resource[`${field}_last_updated`];
   }
 };
+
+export const timestamps = (
+  resource: IResource,
+  edited: (field: string) => boolean,
+  now: Date,
+) => {
+  return Object.keys(resource).filter(edited).reduce(
+    (acc: object, field: any) => ({
+      ...acc,
+      [`${field}_last_updated`]: now,
+    }),
+    {},
+  );
+}

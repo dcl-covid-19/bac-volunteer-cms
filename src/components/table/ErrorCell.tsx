@@ -34,6 +34,7 @@ const ErrorCell: React.FunctionComponent<ErrorCellProps> = (props) => {
 
   return last_updated != null ? (
     <Tooltip
+      arrow
       title={`Last Updated: ${last_updated.toDateString()}`}
       className={clsx({ [classes.error]: hasError })}
     >
