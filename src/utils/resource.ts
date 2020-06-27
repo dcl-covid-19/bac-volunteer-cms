@@ -28,7 +28,10 @@ export const complement = (columnOrder: readonly string[]) => (
 export const fromBoolean = (resource: IResource) => ({
   ...resource,
   ...BOOLEAN_COLUMNS.reduce(
-    (acc: object, field: string) => ({ ...acc, [field]: Number(resource[field]) }),
+    (acc: object, field: string) => ({
+      ...acc,
+      [field]: resource[field] == null ? null : Number(resource[field])
+    }),
     {}
   ),
 });

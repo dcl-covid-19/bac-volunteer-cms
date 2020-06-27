@@ -49,6 +49,7 @@ const TableToolbar: React.FunctionComponent<TableToolbarProps> = (props) => {
     skipPageResetRef,
   } = props;
   const {
+    setFilter,
     setColumnOrder,
     setHiddenColumns,
     setGlobalFilter,
@@ -109,6 +110,7 @@ const TableToolbar: React.FunctionComponent<TableToolbarProps> = (props) => {
           <ResourceTypeDropdown
             resourceType={resourceType}
             setResourceType={setResourceType}
+            setFilter={setFilter}
           />
           <FilterButton />
           <ReorderButton lists={lists} setLists={setLists} />

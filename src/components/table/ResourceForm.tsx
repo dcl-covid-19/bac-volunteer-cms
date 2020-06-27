@@ -33,6 +33,11 @@ export const ResourceForm: React.FunctionComponent<ResourceFormProps> =
       <CheckboxGroup required field="county" />
       {RESOURCE_CONDITION.payment.includes(resource) &&
           <RadioGroup required field="payment" />}
+      {RESOURCE_CONDITION.accepts_medical.includes(resource) && (
+        <div className={classes.formGroup}>
+          <RequiredCheckbox field="accepts_medical" />
+        </div>
+      )}
       <TextField fullWidth field="address" />
       <div className={classes.formGroup}>
         <RequiredCheckbox field="bob" />

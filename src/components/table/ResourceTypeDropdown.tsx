@@ -16,17 +16,20 @@ export type ResourceType = keyof typeof SIMPLE_OPTIONS.resource | 'all';
 interface ResourceTypeDropdownProps {
   resourceType: ResourceType,
   setResourceType: React.Dispatch<React.SetStateAction<ResourceType>>;
+  setFilter: (columnId: string, filterValue: string) => void;
 }
 
 export const ResourceTypeDropdown: (
   React.FunctionComponent<ResourceTypeDropdownProps>
 )= (props) => {
   const classes = useStyles();
-  const { resourceType, setResourceType } = props;
+  const { resourceType, setResourceType, setFilter } = props;
   const handleChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) =>
-        setResourceType(event.target.value as ResourceType),
-    [setResourceType],
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      setFilter('resource', event.target.value);
+      setResourceType(event.target.value as ResourceType);
+    },
+    [setResourceType, setFilter],
   );
   return (
     <NativeSelect

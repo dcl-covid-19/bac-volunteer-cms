@@ -62,6 +62,7 @@ export const SIMPLE_OPTIONS = Object.freeze({
 
 export const RESOURCE_CONDITION = Object.freeze({
   "payment": ["health", "legal_assistance", "legal_general_info"],
+  "accepts_medical": ["health"],
 });
 
 export const NESTED_GROUPS = Object.freeze({ ...CHECKBOX_GROUPS, ...RADIO_GROUPS });
@@ -100,6 +101,7 @@ export const DEFAULT_SHOWN = Object.freeze([
   "resource",
   "county",
   "payment",
+  "accepts_medical",
   "last_update",
 ]);
 
@@ -173,4 +175,5 @@ export const VALIDATORS: any = Object.freeze({
   'county': (county: string) => !!county,
   'payment': (payment: string) => !!payment && !payment.includes(','),
   'bob': (bob?: number | null) => bob != null,
+  'accepts_medical': (accepts_medical?: number | null) => accepts_medical != null,
 });

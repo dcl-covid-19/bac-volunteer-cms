@@ -5,6 +5,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TablePagination from '@material-ui/core/TablePagination';
 import {
   useColumnOrder,
+  useFilters,
   useGlobalFilter,
   usePagination,
   useRowSelect,
@@ -69,6 +70,7 @@ const Table: React.FunctionComponent<TableProps> = (props) => {
       autoResetGlobalFilter: !skipPageResetRef.current,
       updateRow,
     },
+    useFilters,
     useGlobalFilter,
     useSortBy,
     usePagination,
