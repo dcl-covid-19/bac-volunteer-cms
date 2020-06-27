@@ -6,6 +6,8 @@ import MuiTableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow';
 
+import { ACTIONS } from 'utils/constants';
+
 const useStyles = makeStyles((theme: Theme) => createStyles({
   zebra: {
     backgroundColor: theme.palette.grey['100'],
@@ -35,7 +37,7 @@ const TableBody: React.FunctionComponent<TableBodyProps> = (props) => {
                 <TableCell
                   {...cell.getCellProps()}
                   padding={
-                    cell.column.id === 'actions' ?
+                    cell.column.id === ACTIONS ?
                     "checkbox" :
                     "default"
                   }

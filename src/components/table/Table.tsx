@@ -10,7 +10,7 @@ import {
   useRowSelect,
   useSortBy,
   useTable,
-  Column
+  Column,
 } from 'react-table';
 
 import ActionButtonsCell from './ActionButtonsCell';
@@ -20,7 +20,8 @@ import TableBody from './TableBody';
 import TableHeader from './TableHeader';
 import TablePaginationActions from './TablePaginationActions';
 import TableToolbar from './TableToolbar';
-import { IResource, DEFAULT_SHOWN, HEADERS } from 'utils/constants';
+import { IResource, ACTIONS, DEFAULT_SHOWN } from 'utils/constants';
+import { applyResourceConditions, complement } from 'utils/resource';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   footer: {
@@ -48,32 +49,19 @@ const Table: React.FunctionComponent<TableProps> = (props) => {
   });
   const defaultColumn = { Cell: ErrorCell };
   const actionsColumn = {
-    id: 'actions',
+    id: ACTIONS,
     Header: ActionButtonsHeader,
     Cell: ActionButtonsCell,
   };
-  const {
-    getTableProps,
-    headerGroups,
-    prepareRow,
-    rows,
-    page,
-    gotoPage,
-    setColumnOrder,
-    setHiddenColumns,
-    setPageSize,
-    setGlobalFilter,
-    state: { columnOrder, pageIndex, pageSize, selectedRowIds, globalFilter },
-  } = useTable(
+  const columnOrder = applyResourceConditions(DEFAULT_SHOWN, 'all');
+  const tableMethods = useTable(
     {
       columns: columns as Column<Object>[],
       data: data as Object[],
       defaultColumn,
       initialState: {
-        columnOrder: ['actions', ...DEFAULT_SHOWN],
-        hiddenColumns: Object.keys(HEADERS).filter(
-          key => !DEFAULT_SHOWN.includes(key)
-        ),
+        columnOrder,
+        hiddenColumns: complement(columnOrder)
       },
       autoResetPage: !skipPageResetRef.current,
       autoResetSortBy: !skipPageResetRef.current,
@@ -88,6 +76,16 @@ const Table: React.FunctionComponent<TableProps> = (props) => {
     useColumnOrder,
     hooks => hooks.allColumns.push(columns => [actionsColumn, ...columns]),
   );
+  const {
+    getTableProps,
+    headerGroups,
+    prepareRow,
+    rows,
+    page,
+    gotoPage,
+    setPageSize,
+    state: { pageIndex, pageSize, selectedRowIds },
+  } = tableMethods;
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLElement> | null,
@@ -116,14 +114,9 @@ const Table: React.FunctionComponent<TableProps> = (props) => {
   return (
     <>
       <TableToolbar
-        numSelected={Object.keys(selectedRowIds).length}
-        globalFilter={globalFilter}
-        setGlobalFilter={setGlobalFilter}
+        tableMethods={tableMethods}
         newResourceHandler={newResourceHandler}
         deleteHandler={deleteHandler}
-        columnOrder={columnOrder}
-        setColumnOrder={setColumnOrder}
-        setHiddenColumns={setHiddenColumns}
         skipPageResetRef={skipPageResetRef}
       />
       <TableContainer>

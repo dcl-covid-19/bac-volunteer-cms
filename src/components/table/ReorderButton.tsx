@@ -10,40 +10,20 @@ import ViewColumnRoundedIcon from '@material-ui/icons/ViewColumnRounded';
 
 import { IListResult } from './ReorderList';
 import ReorderForm from './ReorderForm';
-import { HEADERS } from 'utils/constants';
 
 interface ReorderButtonProps {
-  setColumnOrder: (updater: any) => void;
-  setHiddenColumns: (updater: any) => void;
-  skipPageResetRef: React.MutableRefObject<boolean | undefined>;
-  columnOrder: string[];
+  lists: IListResult;
+  setLists: React.Dispatch<React.SetStateAction<IListResult>>;
+  onSubmit: () => void;
 }
 
 const ReorderButton: React.FunctionComponent<ReorderButtonProps> = (props) => {
-  const {
-    columnOrder,
-    setColumnOrder,
-    setHiddenColumns,
-    skipPageResetRef
-  } = props;
+  const { lists, setLists, onSubmit } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
-  const [lists, setLists] = React.useState<IListResult>({
-    shown: [],
-    hidden: [],
-  });
-  React.useEffect(() => {
-    const [, ...realColumns] = columnOrder;
-    setLists({
-      shown: realColumns,
-      hidden: Object.keys(HEADERS).filter(key => !columnOrder.includes(key)),
-    });
-  }, [columnOrder])
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleSubmit = () => {
-    skipPageResetRef.current = true;
-    setColumnOrder(['actions', ...lists.shown]);
-    setHiddenColumns(lists.hidden);
+    onSubmit();
     setOpen(false);
   };
   return (

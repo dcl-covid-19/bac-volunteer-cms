@@ -8,7 +8,7 @@ interface ActionButtonsHeaderProps {
   ) => TableToggleAllRowsSelectedProps;
 }
 
-const ActionButtonsHeader: React.FunctionComponent<ActionButtonsHeaderProps> =
+export const ActionButtonsHeader: React.FunctionComponent<ActionButtonsHeaderProps> =
     (props) => {
   const { getToggleAllRowsSelectedProps } = props;
   return (

@@ -6,6 +6,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
+import { ACTIONS } from 'utils/constants';
+
 const useStyles = makeStyles((theme: Theme) => createStyles({
   header: {
     backgroundColor: theme.palette.grey['200'],
@@ -28,13 +30,13 @@ const TableHeader: React.FunctionComponent<TableHeaderProps> = (props) => {
             <TableCell
               className={classes.header}
               padding={
-                column.id === 'actions' ? "checkbox" : "default"
+                column.id === ACTIONS ? "checkbox" : "default"
               }
-              {...(column.id === 'actions'
+              {...(column.id === ACTIONS
                 ? column.getHeaderProps()
                 : column.getHeaderProps(column.getSortByToggleProps()))}
             >
-              {column.id !== 'actions' ? (
+              {column.id !== ACTIONS ? (
                 <TableSortLabel
                   active={column.isSorted}
                   direction={column.isSortedDesc ? 'desc' : 'asc'}

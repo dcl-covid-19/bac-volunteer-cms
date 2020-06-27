@@ -1,4 +1,5 @@
 import React from 'react';
+import { TableInstance } from 'react-table';
 import clsx from 'clsx';
 import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -9,9 +10,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import FilterButton from './FilterButton';
 import NewResourceButton from './NewResourceButton';
+import { IListResult } from './ReorderList';
 import ReorderButton from './ReorderButton';
 import Search from './Search';
-import { IResource } from 'utils/constants';
+import { applyResourceConditions, complement } from 'utils/resource';
+import { IResource, DEFAULT_SHOWN } from 'utils/constants';
 
 const useToolbarStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,30 +33,37 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
 );
 
 interface TableToolbarProps {
-  numSelected: number;
-  globalFilter: string;
-  setGlobalFilter: (filterValue: string) => void;
+  tableMethods: TableInstance<Object>;
   newResourceHandler: (resource: IResource) => void;
   deleteHandler: (event: React.MouseEvent<HTMLElement>) => void;
-  columnOrder: string[];
-  setColumnOrder: (updater: any) => void;
-  setHiddenColumns: (updater: any) => void;
   skipPageResetRef: React.MutableRefObject<boolean | undefined>;
 }
 
 const TableToolbar: React.FunctionComponent<TableToolbarProps> = (props) => {
   const classes = useToolbarStyles();
   const {
-    numSelected,
-    globalFilter,
-    setGlobalFilter,
+    tableMethods,
     newResourceHandler,
     deleteHandler,
-    columnOrder,
-    setColumnOrder,
-    setHiddenColumns,
     skipPageResetRef,
   } = props;
+  const {
+    setColumnOrder,
+    setHiddenColumns,
+    setGlobalFilter,
+    state: { selectedRowIds, globalFilter },
+  } = tableMethods;
+  const [lists, setLists] = React.useState<IListResult>({
+    shown: [ ...DEFAULT_SHOWN ],
+    hidden: complement(DEFAULT_SHOWN),
+  });
+  const handleChange = React.useCallback(() => {
+    skipPageResetRef.current = true;
+    const columnOrder = applyResourceConditions(lists.shown, 'all');
+    setColumnOrder(columnOrder);
+    setHiddenColumns(complement(columnOrder));
+  }, [skipPageResetRef, lists, setColumnOrder, setHiddenColumns]);
+  const numSelected = Object.keys(selectedRowIds).length;
   const selected = numSelected > 0;
   const onSearchChange = (value: string) => setGlobalFilter(value);
 
@@ -93,10 +103,9 @@ const TableToolbar: React.FunctionComponent<TableToolbarProps> = (props) => {
           <Search onSearchChange={onSearchChange} globalFilter={globalFilter}/>
           <FilterButton />
           <ReorderButton
-            columnOrder={columnOrder}
-            setColumnOrder={setColumnOrder}
-            setHiddenColumns={setHiddenColumns}
-            skipPageResetRef={skipPageResetRef}
+            lists={lists}
+            setLists={setLists}
+            onSubmit={handleChange}
           />
           <NewResourceButton newResourceHandler={newResourceHandler}/>
         </>

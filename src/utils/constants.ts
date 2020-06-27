@@ -2,6 +2,8 @@ import { Column } from 'react-table';
 
 export type IResource = any;
 
+export const ACTIONS = 'actions';
+
 const SIMPLE_HEADERS = Object.freeze({
   "resource": "Resource",
   "accepts_medical": "Accepts Medi-Cal",
@@ -45,7 +47,7 @@ export const RADIO_GROUPS = Object.freeze({
   }
 });
 
-const SIMPLE_OPTIONS = Object.freeze({
+export const SIMPLE_OPTIONS = Object.freeze({
   "resource": {
     "meal": "Free Food Provider",
     "grocery": "Grocery Provider",
@@ -151,7 +153,7 @@ export const COLUMNS = Object.freeze([
   ...COMBO_COLUMNS,
 ]);
 
-export const FLAT_OPTIONS = Object.keys(RADIO_GROUPS).reduce(
+const FLAT_OPTIONS = Object.keys(RADIO_GROUPS).reduce(
   (acc: object, field: string) => {
     const group = RADIO_GROUPS[field as keyof typeof RADIO_GROUPS];
     const { __header, ...rest } = group;

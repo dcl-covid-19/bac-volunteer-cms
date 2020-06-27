@@ -1,10 +1,29 @@
 import {
   IResource,
+  ACTIONS,
   BOOLEAN_COLUMNS,
   CHECKBOX_GROUPS,
+  HEADERS,
+  SIMPLE_OPTIONS,
   RADIO_GROUPS,
   NESTED_GROUPS,
+  RESOURCE_CONDITION,
 } from 'utils/constants';
+
+export const applyResourceConditions = (
+  columnOrder: readonly string[],
+  resource: keyof typeof SIMPLE_OPTIONS.resource | 'all',
+) => [
+  ACTIONS,
+  ...columnOrder.filter(
+    column => !RESOURCE_CONDITION.hasOwnProperty(column) ||
+        (RESOURCE_CONDITION as any)[column].includes(resource)
+  ),
+];
+
+export const complement = (columnOrder: readonly string[]) => (
+  Object.keys(HEADERS).filter(key => !columnOrder.includes(key))
+);
 
 export const fromBoolean = (resource: IResource) => ({
   ...resource,
