@@ -1,6 +1,7 @@
 import {
   IResource,
   ACTIONS,
+  ALL_GROUPS,
   BOOLEAN_COLUMNS,
   CHECKBOX_GROUPS,
   HEADERS,
@@ -28,10 +29,12 @@ export const complement = (columnOrder: readonly string[]) => (
 export const fromBoolean = (resource: IResource) => ({
   ...resource,
   ...BOOLEAN_COLUMNS.reduce(
-    (acc: object, field: string) => ({
-      ...acc,
-      [field]: resource[field] == null ? null : Number(resource[field])
-    }),
+    (acc: object, field: string) => (
+      resource[field] == null ? acc : {
+        ...acc,
+        [field]: Number(resource[field]),
+      }
+    ),
     {}
   ),
 });
@@ -97,3 +100,18 @@ export const toForm = (resource: IResource) => (
   toCheckboxes(toRadio(resource))
 );
 export const fromForm = (resource: IResource) => toFlat(fromBoolean(resource));
+
+export const lastUpdated = (resource: IResource, field: string) => {
+  if (ALL_GROUPS.hasOwnProperty(field)) {
+    return Object.keys(ALL_GROUPS[field]).reduce(
+      (acc: Date | null, key: string) => (
+        resource[`${key}_last_updated`] != null ?
+          resource[`${key}_last_updated`] :
+          acc
+      ),
+      null,
+    );
+  } else {
+    return resource[`${field}_last_updated`];
+  }
+};

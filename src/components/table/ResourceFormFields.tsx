@@ -70,11 +70,10 @@ export const RadioGroup: React.FunctionComponent<RadioProps> = (props) => {
     >
       <FormLabel component="legend">{FORM_FIELDS[field]}</FormLabel>
       {Object.keys(OPTIONS[field]).map(option => (
-        <div>
+        <div key={option}>
           <input
             type="radio"
             id={option}
-            key={option}
             name={field}
             value={option}
             ref={register({ required })}
@@ -125,11 +124,10 @@ export const CheckboxGroup: React.FunctionComponent<CheckboxGroupProps> =
           option => option !== '__header'
         ).map(
           (option) => (
-            <div>
+            <div key={option}>
               <input
                 type="checkbox"
                 id={option}
-                key={option}
                 value={option}
                 name={field}
                 ref={register({ required })}

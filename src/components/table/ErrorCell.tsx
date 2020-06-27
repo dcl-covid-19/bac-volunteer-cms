@@ -1,8 +1,11 @@
 import React from 'react';
-import { Column } from 'react-table';
+import { Column, Row } from 'react-table';
+import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 
-import { VALIDATORS } from 'utils/constants';
+import { lastUpdated } from 'utils/resource';
+import { IResource, VALIDATORS } from 'utils/constants';
 
 const useStyles = makeStyles(theme => ({
   error: {
@@ -16,19 +19,30 @@ const useStyles = makeStyles(theme => ({
 
 interface ErrorCellProps {
   value: any;
+  row: Row<IResource>;
   column: Column<Object>;
 }
 
 const ErrorCell: React.FunctionComponent<ErrorCellProps> = (props) => {
   const classes = useStyles();
-  const { column } = props;
+  const { column, row: { original } } = props;
   const value = column.id === 'last_update' ?
       new Date(props.value).toISOString().split('T')[0] : props.value;
-  const hasErrors = column.id && VALIDATORS[column.id] &&
+  const hasError = column.id && VALIDATORS[column.id] &&
       !VALIDATORS[column.id](value);
+  const last_updated = column.id && lastUpdated(original, column.id);
 
-  return (
-    hasErrors ?
+  return last_updated != null ? (
+    <Tooltip
+      title={`Last Updated: ${last_updated.toDateString()}`}
+      className={clsx({ [classes.error]: hasError })}
+    >
+      <div>
+        {value != null ? value.toString() : null}{'\xa0'}
+      </div>
+    </Tooltip>
+  ) : (
+    hasError ?
       <div className={classes.error}>{value}{'\xa0'}</div> :
       (value != null ? value.toString() : null)
   );

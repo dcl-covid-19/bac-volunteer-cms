@@ -43,7 +43,7 @@ export const ResourceTypeDropdown: (
     >
       <option value="all">All Resources</option>
       {Object.keys(SIMPLE_OPTIONS.resource).map(key => (
-        <option value={key}>
+        <option value={key} key={key}>
           {SIMPLE_OPTIONS.resource[(
             key as keyof typeof SIMPLE_OPTIONS.resource
           )]}

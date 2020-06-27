@@ -135,6 +135,38 @@ export const RESOURCE_CONDITION = Object.freeze({
 
 export const NESTED_GROUPS = Object.freeze({ ...CHECKBOX_GROUPS, ...RADIO_GROUPS });
 
+const COMBO_GROUPS = Object.freeze({
+  "full_address": {
+    "__header": "Address",
+    "address": "Street Address",
+    "city": "City",
+    "state": "State",
+    "zip": "ZIP",
+  },
+  "opening_hours": {
+    "__header": "Opening Hours",
+    "mon": "Monday",
+    "tues": "Tuesday",
+    "wed": "Wednesday",
+    "thr": "Thursday",
+    "fri": "Friday",
+    "sat": "Saturday",
+    "sun": "Sunday",
+  },
+  "sp_opening_hours": {
+    "__header": "Opening Hours (Senior Hours)",
+    "sp_mon": "Monday",
+    "sp_tues": "Tuesday",
+    "sp_wed": "Wednesday",
+    "sp_thr": "Thursday",
+    "sp_fri": "Friday",
+    "sp_sat": "Saturday",
+    "sp_sun": "Sunday",
+  },
+});
+
+export const ALL_GROUPS: any = Object.freeze({ ...NESTED_GROUPS, ...COMBO_GROUPS });
+
 export const COMBO_COLUMNS = Object.freeze([
   {
     Header: "Address",
@@ -208,13 +240,6 @@ export const DEFAULT_SHOWN = Object.freeze([
   "last_update",
 ]);
 
-const FORM_MAP = Object.freeze({
-  "address": "Street Address",
-  "city": "City",
-  "state": "State",
-  "zip": "ZIP",
-});
-
 const NESTED_HEADERS = Object.keys(NESTED_GROUPS).reduce(
   (acc: object, field: string) => ({
     ...acc,
@@ -237,9 +262,18 @@ export const HEADERS: any = Object.freeze({
   ...COMBO_HEADERS,
 });
 
+const COMBO_FLAT_HEADERS = Object.keys(COMBO_GROUPS).reduce(
+  (acc: object, field: string) => {
+    const group = COMBO_GROUPS[field as keyof typeof COMBO_GROUPS];
+    const { __header, ...rest } = group;
+    return { ...acc, ...rest };
+  },
+  {} as any,
+);
+
 export const FORM_FIELDS: any = Object.freeze({
   ...HEADERS,
-  ...FORM_MAP,
+  ...COMBO_FLAT_HEADERS,
 });
 
 const SIMPLE_COLUMNS: readonly Column<Object>[] = Object.freeze(

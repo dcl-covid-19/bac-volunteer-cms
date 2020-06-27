@@ -98,7 +98,17 @@ const Table: React.FunctionComponent<TableProps> = (props) => {
   ) => setPageSize(Number(event.target.value));
   const newResourceHandler = (resource: IResource) => {
     skipPageResetRef.current = true;
-    setData(data.concat([{ ...resource, last_update: new Date() }]));
+    const now = new Date();
+    const stamps = Object.keys(resource).filter(
+      field => !!resource[field]
+    ).reduce(
+      (acc: object, field: any) => ({
+        ...acc,
+        [`${field}_last_updated`]: now,
+      }),
+      {},
+    );
+    setData(data.concat([{ ...resource, ...stamps, last_update: now }]));
   }
   const removeByIndexs = (
     array: readonly IResource[],
