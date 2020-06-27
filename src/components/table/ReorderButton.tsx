@@ -14,18 +14,13 @@ import ReorderForm from './ReorderForm';
 interface ReorderButtonProps {
   lists: IListResult;
   setLists: React.Dispatch<React.SetStateAction<IListResult>>;
-  onSubmit: () => void;
 }
 
 const ReorderButton: React.FunctionComponent<ReorderButtonProps> = (props) => {
-  const { lists, setLists, onSubmit } = props;
+  const { lists, setLists } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleSubmit = () => {
-    onSubmit();
-    setOpen(false);
-  };
   return (
     <>
       <Tooltip title="Add/Remove/Reorder Columns">
@@ -43,15 +38,8 @@ const ReorderButton: React.FunctionComponent<ReorderButtonProps> = (props) => {
           <ReorderForm lists={lists} setLists={setLists} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-          >
-            Save
+          <Button variant="contained" onClick={handleClose} color="default">
+            Close
           </Button>
         </DialogActions>
       </Dialog>

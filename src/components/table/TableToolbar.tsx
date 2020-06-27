@@ -12,6 +12,7 @@ import FilterButton from './FilterButton';
 import NewResourceButton from './NewResourceButton';
 import { IListResult } from './ReorderList';
 import ReorderButton from './ReorderButton';
+import { ResourceType, ResourceTypeDropdown } from './ResourceTypeDropdown';
 import Search from './Search';
 import { applyResourceConditions, complement } from 'utils/resource';
 import { IResource, DEFAULT_SHOWN } from 'utils/constants';
@@ -57,12 +58,16 @@ const TableToolbar: React.FunctionComponent<TableToolbarProps> = (props) => {
     shown: [ ...DEFAULT_SHOWN ],
     hidden: complement(DEFAULT_SHOWN),
   });
-  const handleChange = React.useCallback(() => {
-    skipPageResetRef.current = true;
-    const columnOrder = applyResourceConditions(lists.shown, 'all');
-    setColumnOrder(columnOrder);
-    setHiddenColumns(complement(columnOrder));
-  }, [skipPageResetRef, lists, setColumnOrder, setHiddenColumns]);
+  const [resourceType, setResourceType] = React.useState<ResourceType>('all');
+  React.useEffect(
+    () => {
+      skipPageResetRef.current = true;
+      const columnOrder = applyResourceConditions(lists.shown, resourceType);
+      setColumnOrder(columnOrder);
+      setHiddenColumns(complement(columnOrder));
+    },
+    [skipPageResetRef, setColumnOrder, setHiddenColumns, lists, resourceType],
+  );
   const numSelected = Object.keys(selectedRowIds).length;
   const selected = numSelected > 0;
   const onSearchChange = (value: string) => setGlobalFilter(value);
@@ -101,12 +106,12 @@ const TableToolbar: React.FunctionComponent<TableToolbarProps> = (props) => {
       ) : (
         <>
           <Search onSearchChange={onSearchChange} globalFilter={globalFilter}/>
-          <FilterButton />
-          <ReorderButton
-            lists={lists}
-            setLists={setLists}
-            onSubmit={handleChange}
+          <ResourceTypeDropdown
+            resourceType={resourceType}
+            setResourceType={setResourceType}
           />
+          <FilterButton />
+          <ReorderButton lists={lists} setLists={setLists} />
           <NewResourceButton newResourceHandler={newResourceHandler}/>
         </>
       )}
