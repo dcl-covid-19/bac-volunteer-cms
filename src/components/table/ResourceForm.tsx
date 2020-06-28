@@ -9,7 +9,6 @@ import {
   CheckboxGroup,
   Checkbox,
 } from './ResourceFormFields';
-import { RESOURCE_CONDITION } from 'utils/constants';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   formGroup: {

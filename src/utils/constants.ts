@@ -4,6 +4,21 @@ export type IResource = any;
 
 export const ACTIONS = 'actions';
 
+// 1:1 correspondence with DB column, list of valid values
+export const SIMPLE_OPTIONS = Object.freeze({
+  "resource": {
+    "meal": "Free Food Provider",
+    "grocery": "Grocery Provider",
+    "core": "Core Service Agency (basic emergency and support services)",
+    "financial": "Financial Assistance",
+    "legal_general_info": "Legal General Info (primarily a link for general knowledge or know-your-rights material)",
+    "legal_assistance": "Legal Assistance (provides assistance e.g. counseling, court representation)",
+    "health": "Medical Resource (provides one of several sub-categories)",
+    "enrollment_support": "Enrollment Support (provides information on enrollment e.g. MediCal, CalFresh)"
+  },
+});
+
+// 1:1 correspondence with DB column, no list of valid values
 const SIMPLE_HEADERS = Object.freeze({
   "resource": "Resource",
   "accepts_medical": "Accepts Medi-Cal",
@@ -37,6 +52,29 @@ const SIMPLE_HEADERS = Object.freeze({
   "telehealth": "Teleservice",
 });
 
+// which of the above are 0/1 DB columns
+export const BOOLEAN_COLUMNS: readonly string[] = Object.freeze([
+  "accepts_medical",
+  "call_in_advance",
+  "bob",
+  "special_hours",
+  "ebt_online",
+  "ebt_phone",
+  "must_preorder",
+  "pay_at_pickup",
+  "in_store_pickup",
+  "curbside_pickup",
+  "drive_thru",
+  "delivery",
+  "farm_pickup",
+  "farmers_market",
+  "snap",
+  "wic",
+  "in_person",
+  "telehealth",
+]);
+
+// 1:many correspondence with 0/1 DB columns
 export const CHECKBOX_GROUPS = Object.freeze({
   "county": {
     "__header": "Counties Served",
@@ -90,6 +128,7 @@ export const CHECKBOX_GROUPS = Object.freeze({
   },
 });
 
+// 1:many correspondence with 0/1 DB columns (expects exactly one)
 export const RADIO_GROUPS = Object.freeze({
   "payment": {
     "__header": "Payment Type",
@@ -99,42 +138,7 @@ export const RADIO_GROUPS = Object.freeze({
   }
 });
 
-export const SIMPLE_OPTIONS = Object.freeze({
-  "resource": {
-    "meal": "Free Food Provider",
-    "grocery": "Grocery Provider",
-    "core": "Core Service Agency (basic emergency and support services)",
-    "financial": "Financial Assistance",
-    "legal_general_info": "Legal General Info (primarily a link for general knowledge or know-your-rights material)",
-    "legal_assistance": "Legal Assistance (provides assistance e.g. counseling, court representation)",
-    "health": "Medical Resource (provides one of several sub-categories)",
-    "enrollment_support": "Enrollment Support (provides information on enrollment e.g. MediCal, CalFresh)"
-  },
-});
-
-export const RESOURCE_CONDITION = Object.freeze({
-  "payment": ["health", "legal_assistance", "legal_general_info"],
-  "accepts_medical": ["health"],
-  "ebt_online": ["grocery"],
-  "ebt_phone": ["grocery"],
-  "must_preorder": ["grocery"],
-  "pay_at_pickup": ["grocery"],
-  "in_store_pickup": ["grocery"],
-  "curbside_pickup": ["grocery"],
-  "drive_thru": ["grocery"],
-  "delivery": ["grocery"],
-  "farm_pickup": ["grocery"],
-  "farmers_market": ["grocery"],
-  "snap": ["grocery"],
-  "wic": ["grocery"],
-  "in_person": ["health", "legal_assistance", "legal_general_info"],
-  "telehealth": ["health", "legal_assistance", "legal_general_info"],
-  "legal_areas_served": ["legal_assistance", "legal_general_info"],
-  "medical_services": ["health"],
-});
-
-export const NESTED_GROUPS = Object.freeze({ ...CHECKBOX_GROUPS, ...RADIO_GROUPS });
-
+// 1:many correspondence with non-0/1 DB column
 const COMBO_GROUPS = Object.freeze({
   "full_address": {
     "__header": "Address",
@@ -165,8 +169,7 @@ const COMBO_GROUPS = Object.freeze({
   },
 });
 
-export const ALL_GROUPS: any = Object.freeze({ ...NESTED_GROUPS, ...COMBO_GROUPS });
-
+// describe how to combine the COMBO_GROUPS
 export const COMBO_COLUMNS = Object.freeze([
   {
     Header: "Address",
@@ -203,27 +206,7 @@ export const COMBO_COLUMNS = Object.freeze([
   },
 ]);
 
-export const BOOLEAN_COLUMNS: readonly string[] = Object.freeze([
-  "accepts_medical",
-  "call_in_advance",
-  "bob",
-  "special_hours",
-  "ebt_online",
-  "ebt_phone",
-  "must_preorder",
-  "pay_at_pickup",
-  "in_store_pickup",
-  "curbside_pickup",
-  "drive_thru",
-  "delivery",
-  "farm_pickup",
-  "farmers_market",
-  "snap",
-  "wic",
-  "in_person",
-  "telehealth",
-]);
-
+// show these columns when the website is loaded
 export const DEFAULT_SHOWN = Object.freeze([
   "provider_name",
   "resource",
@@ -239,6 +222,34 @@ export const DEFAULT_SHOWN = Object.freeze([
   "wic",
   "last_update",
 ]);
+
+// show these fields only for some resource
+export const RESOURCE_CONDITION = Object.freeze({
+  "payment": ["health", "legal_assistance", "legal_general_info"],
+  "accepts_medical": ["health"],
+  "ebt_online": ["grocery"],
+  "ebt_phone": ["grocery"],
+  "must_preorder": ["grocery"],
+  "pay_at_pickup": ["grocery"],
+  "in_store_pickup": ["grocery"],
+  "curbside_pickup": ["grocery"],
+  "drive_thru": ["grocery"],
+  "delivery": ["grocery"],
+  "farm_pickup": ["grocery"],
+  "farmers_market": ["grocery"],
+  "snap": ["grocery"],
+  "wic": ["grocery"],
+  "in_person": ["health", "legal_assistance", "legal_general_info"],
+  "telehealth": ["health", "legal_assistance", "legal_general_info"],
+  "legal_areas_served": ["legal_assistance", "legal_general_info"],
+  "medical_services": ["health"],
+});
+
+/* ======== DERIVED CONSTANTS ======== */
+
+export const NESTED_GROUPS = Object.freeze({ ...CHECKBOX_GROUPS, ...RADIO_GROUPS });
+
+export const ALL_GROUPS: any = Object.freeze({ ...NESTED_GROUPS, ...COMBO_GROUPS });
 
 const NESTED_HEADERS = Object.keys(NESTED_GROUPS).reduce(
   (acc: object, field: string) => ({
