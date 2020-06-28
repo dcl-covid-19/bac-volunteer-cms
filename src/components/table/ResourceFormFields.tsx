@@ -56,11 +56,7 @@ export const TextField: React.FunctionComponent<TextProps> = React.memo(
   );
 });
 
-interface RadioProps extends Omit<InputProps, 'field'> {
-  field: string;
-}
-
-export const RadioGroup: React.FunctionComponent<RadioProps> = React.memo(
+export const RadioGroup: React.FunctionComponent<InputProps> = React.memo(
     (props) => {
   const { field, fullWidth, required } = props;
   const { register, errors, watch } = useFormContext();
@@ -161,6 +157,7 @@ export const CheckboxGroup: React.FunctionComponent<CheckboxGroupProps> =
   );
 });
 
+const CHECKBOX_RULES = Object.freeze({ validate: (x: any) => x != null });
 export const Checkbox: React.FunctionComponent<InputProps> = React.memo(
     (props) => {
   const { field, required } = props;
@@ -184,6 +181,11 @@ export const Checkbox: React.FunctionComponent<InputProps> = React.memo(
     },
     [indeterminate, setChecked, setIndeterminate],
   );
+  const inputRef = React.useCallback(input => {
+    if (input) {
+      input.indeterminate = indeterminate;
+    }
+  }, [indeterminate]);
 
   return (
     <>
@@ -195,11 +197,7 @@ export const Checkbox: React.FunctionComponent<InputProps> = React.memo(
         <Controller
           as={
             <input
-              ref={input => {
-                if (input) {
-                  input.indeterminate = indeterminate;
-                }
-              }}
+              ref={inputRef}
               checked={checked}
               id={field}
               type="checkbox"
@@ -208,7 +206,7 @@ export const Checkbox: React.FunctionComponent<InputProps> = React.memo(
           name={field}
           control={control}
           onChange={onChange}
-          rules={required ? { validate: (x: any) => x != null } : undefined}
+          rules={required ? CHECKBOX_RULES : undefined}
         />
         <label htmlFor={field}>
           {FORM_FIELDS[field]}
