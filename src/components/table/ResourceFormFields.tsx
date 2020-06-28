@@ -6,6 +6,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import MuiTextField from '@material-ui/core/TextField';
 
+import { shouldOmit } from 'utils/resource';
 import { FORM_FIELDS, OPTIONS, CHECKBOX_GROUPS } from 'utils/constants';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -32,10 +33,14 @@ interface TextProps extends InputProps {
   rowsMax?: number;
 }
 
-export const TextField: React.FunctionComponent<TextProps> = (props) => {
-  const classes = useStyles();
+export const TextField: React.FunctionComponent<TextProps> = React.memo(
+    (props) => {
   const { field, required, ...rest } = props;
-  const { register, errors } = useFormContext();
+  const { register, errors, watch } = useFormContext();
+  if (shouldOmit(watch('resource'), field)) {
+    return null;
+  };
+  const classes = useStyles();
 
   return (
     <MuiTextField
@@ -49,16 +54,20 @@ export const TextField: React.FunctionComponent<TextProps> = (props) => {
       className={classes.formControl}
     />
   );
-};
+});
 
 interface RadioProps extends Omit<InputProps, 'field'> {
   field: string;
 }
 
-export const RadioGroup: React.FunctionComponent<RadioProps> = (props) => {
-  const classes = useStyles();
+export const RadioGroup: React.FunctionComponent<RadioProps> = React.memo(
+    (props) => {
   const { field, fullWidth, required } = props;
-  const { register, errors } = useFormContext();
+  const { register, errors, watch } = useFormContext();
+  if (shouldOmit(watch('resource'), field)) {
+    return null;
+  };
+  const classes = useStyles();
 
   return (
     <FormControl
@@ -85,17 +94,26 @@ export const RadioGroup: React.FunctionComponent<RadioProps> = (props) => {
       ))}
     </FormControl>
   );
-};
+});
 
 interface CheckboxGroupProps extends Omit<InputProps, 'field'> {
   field: keyof typeof CHECKBOX_GROUPS;
 }
 
 export const CheckboxGroup: React.FunctionComponent<CheckboxGroupProps> =
-    (props) => {
-  const classes = useStyles();
+    React.memo((props) => {
   const { field, fullWidth, required } = props;
-  const { register, errors, setValue, triggerValidation } = useFormContext();
+  const {
+    register,
+    errors,
+    setValue,
+    triggerValidation,
+    watch
+  } = useFormContext();
+  if (shouldOmit(watch('resource'), field)) {
+    return null;
+  };
+  const classes = useStyles();
   const setAll = React.useCallback(() => {
     setValue(field, Object.keys(CHECKBOX_GROUPS[field]));
     triggerValidation(field);
@@ -141,13 +159,16 @@ export const CheckboxGroup: React.FunctionComponent<CheckboxGroupProps> =
       }
     </FormControl>
   );
-};
+});
 
-export const Checkbox: React.FunctionComponent<InputProps> =
+export const Checkbox: React.FunctionComponent<InputProps> = React.memo(
     (props) => {
-  const classes = useStyles();
   const { field, required } = props;
-  const { control, errors } = useFormContext();
+  const { control, errors, watch } = useFormContext();
+  if (shouldOmit(watch('resource'), field)) {
+    return null;
+  };
+  const classes = useStyles();
   const [checked, setChecked] = React.useState<boolean>(
     !!control.defaultValuesRef.current[field]
   );
@@ -196,4 +217,4 @@ export const Checkbox: React.FunctionComponent<InputProps> =
       </span>
     </>
   );
-};
+});

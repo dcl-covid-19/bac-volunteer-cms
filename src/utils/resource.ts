@@ -129,3 +129,10 @@ export const timestamps = (
     {},
   );
 }
+
+export const shouldOmit = (resourceType: string, field: string) => (
+  RESOURCE_CONDITION.hasOwnProperty(field) &&
+  !RESOURCE_CONDITION[field as keyof typeof RESOURCE_CONDITION].includes(
+    resourceType
+  )
+);
